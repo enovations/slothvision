@@ -11,7 +11,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 import java.awt.image.BufferedImage;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
-import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.GL;
 
 public class OpenGLWindow {
 
@@ -61,14 +61,14 @@ public class OpenGLWindow {
 			}
 			render();
 
-			if (glfwWindowShouldClose(window) == GL_TRUE) {
+			if (glfwWindowShouldClose(window)) {
 				running = false;
 			}
 		}
 	}
 
 	public void init() {
-		if (glfwInit() != GL_TRUE) {
+		if (!glfwInit()) {
 			System.err.println("GLFW initialization failed");
 		}
 
@@ -88,9 +88,9 @@ public class OpenGLWindow {
 		}
 
 		glfwMakeContextCurrent(window);
+        GL.createCapabilities();
 		glfwSwapInterval(1);
-
-		GLContext.createFromCurrent();
+		//glfwShowWindow(window);
 
 		glClearColor(0f, 0f, 0f, 1f);
 
