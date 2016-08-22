@@ -1,0 +1,45 @@
+#version 400 core
+
+layout(location = 0) in vec3 coordinates;
+layout(location = 1) in vec2 textureCoordinates;
+
+out vec2 pass_textureCoordinates;
+ 
+vec4 Distort(vec4 p, float BarrelPower) {
+	float CALIBRATION2 = -0.068731;
+	float paramA = -0.007715;
+	float paramC = -0.25;
+	float paramD = 1.0 - paramA - CALIBRATION2 - paramC;
+
+
+    vec2 v = p.xy / p.w;
+    // Convert to polar coords:
+    float radius = length(v);
+    if (radius > 0) {
+      float theta = atan(v.y, v.x);
+      
+      // Distort:
+      radius = (paramA * radius * radius * radius + CALIBRATION2 * radius * radius + paramC * radius + paramD)
+						* radius * 0.77;
+ 
+      // Convert back to Cartesian:
+      v.x = radius * cos(theta);
+      v.y = radius * sin(theta);
+      p.xy = v.xy * p.w;
+    }
+    return p;
+}
+ 
+void main() {
+  vec4 P = vec4(coordinates, 1);
+  P.x -= 0.45;
+  
+  vec4 newPos = Distort(P, 0.9);
+  newPos.x += 0.42;
+  //newPos.y += 0.03;
+  
+  newPos.x += 0.03;
+  
+  gl_Position = newPos;
+  pass_textureCoordinates = textureCoordinates;
+}
