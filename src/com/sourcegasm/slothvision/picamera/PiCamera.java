@@ -25,9 +25,21 @@ public class PiCamera {
             String ip = getIp("enp0s25");
             instance1.setIPAddress(ip);
             instance2.setIPAddress(ip);
+            instance1.setPort(5000);
+            instance2.setPort(5001);
         }catch (Exception e){
             System.out.println("COUDL NOT FIND IP FOR " + netInterface);
         }
+    }
+
+    public void kill(){
+        instance1.run();
+        instance2.run();
+    }
+
+    public void run(){
+        instance1.run();
+        instance2.run();
     }
 
     private static String getIp(String ifName) throws SocketException {
