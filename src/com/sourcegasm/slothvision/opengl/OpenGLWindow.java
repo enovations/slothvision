@@ -9,6 +9,10 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import java.awt.image.BufferedImage;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.nio.FloatBuffer;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
@@ -27,10 +31,22 @@ public class OpenGLWindow {
 
 	public BufferedImage rightImage;
 	public BufferedImage leftImage;
-
 	int lid, rid;
 
-	public OpenGLWindow() {
+    public String host = "192.168.0.100";
+    public int port = 12345;
+
+    public DatagramSocket sock;
+    public InetAddress IPAddress;
+
+    public OpenGLWindow() {
+	    try {
+            sock = new DatagramSocket();
+            IPAddress = InetAddress.getByName(host);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 		keyCallback = new GLFWKeyCallback() {
 			@Override public void invoke(long arg0, int arg1, int arg2, int arg3, int arg4) {
 				if (arg1 == GLFW_KEY_ESCAPE && arg3 == GLFW_PRESS) {
@@ -118,8 +134,44 @@ public class OpenGLWindow {
 	}
 
 	public void update() {
-		glfwPollEvents();
-	}
+	    // desno levo desno gor desno desno desno gor
+
+        float maxRobotSpeed = 1.0f;
+        float maxGimbalo = 500;
+
+        glfwPollEvents();
+
+        FloatBuffer buffer = glfwGetJoystickAxes(GLFW_JOYSTICK_1);
+
+        float robotLeftRight = buffer.get() * -1 * maxRobotSpeed;
+        if (robotLeftRight < 0.01 && robotLeftRight > -0.01) {
+            robotLeftRight = 0;
+        }
+        float robotUpDown = buffer.get() * -1 * maxRobotSpeed;
+        if (robotUpDown < 0.01 && robotUpDown > -0.01) {
+            robotUpDown = 0;
+        }
+
+        float gimbaloLeftRight = buffer.get() * maxGimbalo;
+        float gimbaloUpDown = buffer.get() * maxGimbalo;
+
+        try {
+            String robotMessageString = "r " + robotUpDown + " " + robotLeftRight;
+
+            byte[] sendData = robotMessageString.getBytes();
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+            sock.send(sendPacket);
+
+            String gimbaloMessageString = "g " + gimbaloLeftRight + " " + gimbaloUpDown;
+            sendData = gimbaloMessageString.getBytes();
+            sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+            sock.send(sendPacket);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(gimbaloLeftRight + " " + gimbaloUpDown);
+    }
 
 	public void render() {
 		glfwSwapBuffers(window);
