@@ -15,7 +15,7 @@ public class TextureLoader {
 
 	private static final int BYTES_PER_PIXEL = 4;
 
-	public static int loadTexture(BufferedImage image) {
+	public static int loadTexture(BufferedImage image, int textureID) {
 		final int[] pixels = new int[image.getWidth() * image.getHeight()];
 		image.getRGB(0, 0, image.getWidth(), image.getHeight(), pixels, 0, image.getWidth());
 
@@ -33,7 +33,6 @@ public class TextureLoader {
 
 		buffer.flip();
 
-		final int textureID = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, textureID);
 
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);

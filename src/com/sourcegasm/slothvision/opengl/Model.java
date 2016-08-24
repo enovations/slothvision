@@ -24,7 +24,7 @@ public class Model {
 	private final ArrayList<Integer> buffers = new ArrayList<Integer>();
 
 	public Model(float[] vertices, int[] indices, float[] textureCoords, BufferedImage texture, String vertexShaderLoc,
-			String fragmentShaderLoc) {
+			String fragmentShaderLoc, int id) {
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 		storeIndices(indices);
@@ -33,7 +33,7 @@ public class Model {
 		glBindVertexArray(0);
 
 		this.texture = texture;
-		textureID = TextureLoader.loadTexture(this.texture);
+		textureID = TextureLoader.loadTexture(this.texture, id);
 
 		programID = ShaderUtils.load(vertexShaderLoc, fragmentShaderLoc);
 

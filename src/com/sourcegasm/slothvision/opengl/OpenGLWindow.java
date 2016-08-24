@@ -27,15 +27,16 @@ public class OpenGLWindow {
 
 	public BufferedImage rightImage;
 	public BufferedImage leftImage;
-	
+
+	int lid, rid;
+
 	public OpenGLWindow() {
 		keyCallback = new GLFWKeyCallback() {
-			@Override
-			public void invoke(long arg0, int arg1, int arg2, int arg3, int arg4) {
+			@Override public void invoke(long arg0, int arg1, int arg2, int arg3, int arg4) {
 				if (arg1 == GLFW_KEY_ESCAPE && arg3 == GLFW_PRESS) {
 					running = false;
 				}
-			};
+			}
 		};
 	}
 
@@ -52,8 +53,11 @@ public class OpenGLWindow {
 			delta += now - startTime;
 			startTime = now;
 
-			leftSide.textureID = TextureLoader.loadTexture(leftImage);
-			rightSide.textureID = TextureLoader.loadTexture(rightImage);
+			if (leftImage != null)
+				TextureLoader.loadTexture(leftImage,lid);
+
+			if (rightImage != null)
+				TextureLoader.loadTexture(rightImage,rid);
 
 			while (delta >= interval) {
 				update();
@@ -79,16 +83,16 @@ public class OpenGLWindow {
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-//		window = glfwCreateWindow(width, height, "SlothVision", glfwGetMonitors().get(1), NULL);
-//		window = glfwCreateWindow(width, height, "SlothVision", glfwGetPrimaryMonitor(), NULL);
-		window = glfwCreateWindow(width, height, "SlothVision", NULL, NULL);
+		window = glfwCreateWindow(width, height, "SlothVision", glfwGetMonitors().get(2), NULL);
+		//window = glfwCreateWindow(width, height, "SlothVision", glfwGetPrimaryMonitor(), NULL);
+		//window = glfwCreateWindow(width, height, "SlothVision", NULL, NULL);
 
 		if (window == NULL) {
 			System.err.println("Could not create our Window!");
 		}
 
 		glfwMakeContextCurrent(window);
-        GL.createCapabilities();
+		GL.createCapabilities();
 		glfwSwapInterval(1);
 		//glfwShowWindow(window);
 
@@ -96,19 +100,21 @@ public class OpenGLWindow {
 
 		glfwSetKeyCallback(window, keyCallback);
 
-
 		BufferedImage texture = TextureLoader.loadImage("res/grid.png");
 
 		leftImage = texture;
 		rightImage = texture;
 
+		lid = glGenTextures();
+		rid = glGenTextures();
+
 		final int[] indices = MeshMaker.indices();
 		final float[] textureCoords = MeshMaker.textureCoords();
 
 		leftSide = new Model(MeshMaker.leftMesh(), indices, textureCoords, texture, "shaders/vertexShaderLeft.txt",
-				"shaders/fragmentShader.txt");
+				"shaders/fragmentShader.txt", lid);
 		rightSide = new Model(MeshMaker.rightMesh(), indices, textureCoords, texture, "shaders/vertexShaderRight.txt",
-				"shaders/fragmentShader.txt");
+				"shaders/fragmentShader.txt", rid);
 	}
 
 	public void update() {
@@ -125,9 +131,10 @@ public class OpenGLWindow {
 		glBindVertexArray(leftSide.vao);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		glBindTexture(GL_TEXTURE_2D, leftSide.textureID);
+		glBindTexture(GL_TEXTURE_2D, lid);
 		glDrawElements(GL_TRIANGLES, leftSide.size, GL_UNSIGNED_INT, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		//glBindTexture(GL_TEXTURE_2D, 0);
+		//glDeleteTextures(leftSide.textureID);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);
@@ -140,9 +147,10 @@ public class OpenGLWindow {
 		glBindVertexArray(rightSide.vao);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
-		glBindTexture(GL_TEXTURE_2D, rightSide.textureID);
+		glBindTexture(GL_TEXTURE_2D, rid);
 		glDrawElements(GL_TRIANGLES, rightSide.size, GL_UNSIGNED_INT, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		//glBindTexture(GL_TEXTURE_2D, 0);
+		//glDeleteTextures(rightSide.textureID);
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);
