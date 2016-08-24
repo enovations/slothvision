@@ -1,0 +1,5 @@
+enable raspi camera
+put both scripts to /opt/ on rbpi
+mark them as excecutable
+assign at least 128mb ram to graphics in config > memory split
+
