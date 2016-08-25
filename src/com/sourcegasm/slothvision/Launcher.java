@@ -62,17 +62,23 @@ public class Launcher {
 		}
 
 		GUIAssembly assembly = new GUIAssembly(src1, src2);
+
+
+		SlothEyesController slothEyesController = new SlothEyesController(assembly);
+		new Thread(()->{
+			while (true) {
+				slothEyesController.calculateDistance();
+				try {
+					Thread.sleep(50);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();
+
 		assembly.showAssembly();
 
-        SlothEyesController slothEyesController = new SlothEyesController(assembly);
-        while (true) {
-			System.out.println(slothEyesController.calculateDistance());
-            try {
-                Thread.sleep(50);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+
 	}
 
 	private static boolean isSlothAccessible() {

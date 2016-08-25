@@ -1,7 +1,10 @@
 package com.sourcegasm.slothvision.control;
 
 import com.sourcegasm.slothvision.Launcher;
+import com.sourcegasm.slothvision.control.modes.ModeSwitcher;
 import com.sourcegasm.slothvision.oculus.Euler;
+
+import java.nio.ByteBuffer;
 
 public class MainController implements Runnable {
 
@@ -12,6 +15,10 @@ public class MainController implements Runnable {
 
 	private LowPassFilter panFilter = new LowPassFilter(2);
 	private LowPassFilter tiltFilter = new LowPassFilter(2);
+
+	ModeSwitcher switcher = new ModeSwitcher();
+
+	int oldState1 = 0;
 
 	public MainController() {
 
@@ -25,17 +32,33 @@ public class MainController implements Runnable {
 
 			long milis = System.currentTimeMillis();
 
+			ByteBuffer buttons = Launcher.joystick.buttonBuffer;
+
+			if(buttons!=null) {
+
+				//while (buttons.hasRemaining())
+				//	System.out.print(buttons.get());
+				//System.out.println();
+
+			}
+
 			Euler euler = Launcher.hmdSensors.getEulerAngles();
 			if (euler != null) {
 				control.pan = panFilter.calculate(euler.yaw * 80.0);
 				control.tilt = Limiter.limitValues(tiltFilter.calculate(euler.pitch * -90.0), 3500);
 			}
 
-			if (Launcher.joystick.button_drive == 1) {
-				control.speed = Launcher.joystick.left_ud;
-				control.steer = Launcher.joystick.left_lr;
-			} else {
-				control.speed = control.steer = 0;
+			if(Launcher.piROSConnector.data.mode == 0) {
+
+				if (Launcher.joystick.button_drive == 1) {
+					control.speed = Launcher.joystick.left_ud;
+					control.steer = Launcher.joystick.left_lr;
+				} else {
+					control.speed = control.steer = 0;
+				}
+
+			}else if(Launcher.piROSConnector.data.mode == 1) {
+				//cv controls auto
 			}
 
 			//send data updates

@@ -13,7 +13,7 @@ public class SlothEyesController {
         this.guiAssembly = guiAssembly;
     }
 
-    public int calculateDistance() {
+    public double calculateDistance() {
         BufferedImage image1 = guiAssembly.src1.getCurrentFrame();
         BufferedImage image2 = guiAssembly.src2.getCurrentFrame();
 
@@ -24,10 +24,9 @@ public class SlothEyesController {
         LocationData data1 = SlothEyes.getMarkerData(image1);
         LocationData data2 = SlothEyes.getMarkerData(image2);
 
-        if (data1.x == 0 || data2.x == 0) return 0;
 
-        int distance = Math.abs(data1.x - data2.x);
-        System.out.println(distance);
-        return distance;
+        double distance = Math.abs(data1.x - data2.x);
+        System.out.println(data1.x);
+        return 0;
     }
 }
