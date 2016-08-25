@@ -2,6 +2,7 @@ package com.sourcegasm.slothvision;
 
 import com.sourcegasm.slothvision.control.JoystickData;
 import com.sourcegasm.slothvision.control.MainController;
+import com.sourcegasm.slothvision.control.SlothEyesController;
 import com.sourcegasm.slothvision.gstreamer.GStreamerUDPSRCGrabber;
 import com.sourcegasm.slothvision.gui.GUIAssembly;
 import com.sourcegasm.slothvision.oculus.HMDSensors;
@@ -63,6 +64,15 @@ public class Launcher {
 		GUIAssembly assembly = new GUIAssembly(src1, src2);
 		assembly.showAssembly();
 
+        SlothEyesController slothEyesController = new SlothEyesController(assembly);
+        while (true) {
+            slothEyesController.calculateDistance();
+            try {
+                Thread.sleep(50);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 	}
 
 	private static boolean isSlothAccessible() {

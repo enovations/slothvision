@@ -12,8 +12,8 @@ import java.awt.image.BufferedImage;
 public class GUIAssembly {
 
 	private OpenGLWindow window = null;
-	private GStreamerUDPSRCGrabber src1 = null;
-	private GStreamerUDPSRCGrabber src2 = null;
+	public GStreamerUDPSRCGrabber src1 = null;
+	public GStreamerUDPSRCGrabber src2 = null;
 	public static boolean running = true;
 
 	public GUIAssembly(GStreamerUDPSRCGrabber src1, GStreamerUDPSRCGrabber src2) {
