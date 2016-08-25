@@ -14,6 +14,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.nio.FloatBuffer;
 
+import com.sourcegasm.slothvision.Launcher;
 import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 
@@ -33,20 +34,7 @@ public class OpenGLWindow {
 	public BufferedImage leftImage;
 	int lid, rid;
 
-    public String host = "192.168.0.100";
-    public int port = 12345;
-
-    public DatagramSocket sock;
-    public InetAddress IPAddress;
-
-    public OpenGLWindow() {
-	    try {
-            sock = new DatagramSocket();
-            IPAddress = InetAddress.getByName(host);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+	public OpenGLWindow() {
 		keyCallback = new GLFWKeyCallback() {
 			@Override public void invoke(long arg0, int arg1, int arg2, int arg3, int arg4) {
 				if (arg1 == GLFW_KEY_ESCAPE && arg3 == GLFW_PRESS) {
@@ -70,10 +58,10 @@ public class OpenGLWindow {
 			startTime = now;
 
 			if (leftImage != null)
-				TextureLoader.loadTexture(leftImage,lid);
+				TextureLoader.loadTexture(leftImage, lid);
 
 			if (rightImage != null)
-				TextureLoader.loadTexture(rightImage,rid);
+				TextureLoader.loadTexture(rightImage, rid);
 
 			while (delta >= interval) {
 				update();
@@ -134,44 +122,35 @@ public class OpenGLWindow {
 	}
 
 	public void update() {
-	    // desno levo desno gor desno desno desno gor
+		// desno levo desno gor desno desno desno gor
 
-        float maxRobotSpeed = 1.0f;
-        float maxGimbalo = 500;
+		float maxRobotSpeed = 1.0f;
+		float maxGimbalo = 500;
 
-        glfwPollEvents();
+		glfwPollEvents();
 
-        FloatBuffer buffer = glfwGetJoystickAxes(GLFW_JOYSTICK_1);
+		FloatBuffer buffer = glfwGetJoystickAxes(GLFW_JOYSTICK_1);
 
-        float robotLeftRight = buffer.get() * -1 * maxRobotSpeed;
-        if (robotLeftRight < 0.01 && robotLeftRight > -0.01) {
-            robotLeftRight = 0;
-        }
-        float robotUpDown = buffer.get() * -1 * maxRobotSpeed;
-        if (robotUpDown < 0.01 && robotUpDown > -0.01) {
-            robotUpDown = 0;
-        }
+		if (buffer != null) {
 
-        float gimbaloLeftRight = buffer.get() * maxGimbalo;
-        float gimbaloUpDown = buffer.get() * maxGimbalo;
+			float robotLeftRight = buffer.get() * -1 * maxRobotSpeed;
+			if (robotLeftRight < 0.01 && robotLeftRight > -0.01) {
+				robotLeftRight = 0;
+			}
+			float robotUpDown = buffer.get() * -1 * maxRobotSpeed;
+			if (robotUpDown < 0.01 && robotUpDown > -0.01) {
+				robotUpDown = 0;
+			}
 
-        try {
-            String robotMessageString = "r " + robotUpDown + " " + robotLeftRight;
+			//float gimbaloLeftRight = buffer.get() * maxGimbalo;
+			//float gimbaloUpDown = buffer.get() * maxGimbalo;
 
-            byte[] sendData = robotMessageString.getBytes();
-            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-            sock.send(sendPacket);
+			//joystick
+			Launcher.joystick.left_lr = robotLeftRight;
+			Launcher.joystick.left_ud = robotUpDown;
 
-            String gimbaloMessageString = "g " + gimbaloLeftRight + " " + gimbaloUpDown;
-            sendData = gimbaloMessageString.getBytes();
-            sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-            sock.send(sendPacket);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(gimbaloLeftRight + " " + gimbaloUpDown);
-    }
+		}
+	}
 
 	public void render() {
 		glfwSwapBuffers(window);

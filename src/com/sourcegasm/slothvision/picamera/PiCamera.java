@@ -22,7 +22,7 @@ public class PiCamera {
             System.out.println("COULD NOT CONNECT TO RBPI2 (192.168.0.51)");
         }
         try {
-            String ip = getIp("enp0s25");
+            String ip = getIp(netInterface);
             instance1.setIPAddress(ip);
             instance2.setIPAddress(ip);
             instance1.setPort(5000);

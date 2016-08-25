@@ -7,7 +7,7 @@ out vec2 pass_textureCoordinates;
  
 vec4 Distort(vec4 p, float BarrelPower) {
 	float CALIBRATION2 = -0.068731;
-	float paramA = -0.007715;
+	float paramA = -0.007115;
 	float paramC = -0.25;
 	float paramD = 1.0 - paramA - CALIBRATION2 - paramC;
 

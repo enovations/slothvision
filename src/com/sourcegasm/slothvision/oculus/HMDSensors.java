@@ -26,7 +26,7 @@ public class HMDSensors {
 						System.out.println("proc error: " + s);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.out.println("HMDSensors just died!");
 				}
 			}).start();
 
