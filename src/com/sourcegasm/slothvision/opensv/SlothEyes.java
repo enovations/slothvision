@@ -8,6 +8,6 @@ public class SlothEyes {
     public SlothEyes(GUIAssembly guiAssembly) {
         this.guiAssembly = guiAssembly;
     }
-    
+
 
 }
