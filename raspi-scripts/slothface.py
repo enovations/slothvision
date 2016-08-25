@@ -3,6 +3,7 @@ import rospy
 from geometry_msgs.msg import Twist
 from geometry_msgs.msg import Vector3
 from amsc_common.msg import PowerSupply
+from sensor_msgs.msg import PointCloud
 
 SEND_IP = ""
 SEND_PORT = -1
@@ -13,11 +14,19 @@ UDP_PORT = 8008
 send_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 def battery(data):
-    print(SEND_IP, SEND_PORT)
     if SEND_IP != "" and SEND_PORT != -1:
         to_send = 'battery: ' + str(data.batteries[0].voltage)
         send_sock.sendto(to_send, (SEND_IP, SEND_PORT))
-        print('battery poslan')
+
+def sonar(data):
+    if SEND_IP != "" and SEND_PORT != -1:
+        send_sock.sendto('sonar new', (SEND_IP, SEND_PORT))
+        print('sonar new')
+        for point in data.points:
+            to_send = 'sonar: ' + str(point.x) + ' ' + str(point.y)
+            print(to_send)
+            send_sock.sendto(to_send, (SEND_IP, SEND_PORT))
+
 
 def talker():
     sock = socket.socket(socket.AF_INET,
@@ -29,6 +38,7 @@ def talker():
     rospy.init_node('talker', anonymous=True)
 
     rospy.Subscriber('/robot/power_supply', PowerSupply, battery)
+    rospy.Subscriber('/robot/sonar', PointCloud, sonar)
 
     rate = rospy.Rate(100)
     while not rospy.is_shutdown():
