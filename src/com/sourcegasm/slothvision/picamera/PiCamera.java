@@ -1,7 +1,6 @@
 package com.sourcegasm.slothvision.picamera;
 
 import java.net.InetAddress;
-import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;

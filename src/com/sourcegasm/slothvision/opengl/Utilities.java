@@ -1,13 +1,13 @@
 package com.sourcegasm.slothvision.opengl;
 
+import org.lwjgl.BufferUtils;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-
-import org.lwjgl.BufferUtils;
 
 public class Utilities {
 
