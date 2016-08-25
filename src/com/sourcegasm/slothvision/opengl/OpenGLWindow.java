@@ -31,7 +31,7 @@ public class OpenGLWindow {
 	int lid, rid;
 
 	public OpenGLWindow() {
-		keyCallback = new GLFWKeyCallback() {
+        keyCallback = new GLFWKeyCallback() {
 			@Override public void invoke(long arg0, int arg1, int arg2, int arg3, int arg4) {
 				if (arg1 == GLFW_KEY_ESCAPE && arg3 == GLFW_PRESS) {
 					running = false;
