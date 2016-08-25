@@ -52,10 +52,16 @@ public class PiROSConnector implements Runnable {
 				serverSocket.receive(receivePacket);
 				String sentence = new String(receivePacket.getData(), 0, receivePacket.getLength());
 
-				if(sentence.startsWith("battery: ")){
-					data.battery = Float.parseFloat(sentence.replace("battery: ","").trim());
-				}else{
-					System.out.println("Unknown message from ros pi: "+sentence);
+				if (sentence.startsWith("battery: ")) {
+					data.battery = Float.parseFloat(sentence.replace("battery: ", "").trim());
+				} else if (sentence.startsWith("sonar new")) {
+					data.points.clear();
+				} else if (sentence.startsWith("sonar: ")) {
+					data.points
+							.add(new PiROSData.Point(Double.parseDouble(sentence.replace("sonar: ", "").split(" ")[0]),
+									Double.parseDouble(sentence.replace("sonar: ", "").split(" ")[1])));
+				} else {
+					System.out.println("Unknown message from ros pi: " + sentence);
 				}
 			}
 		} catch (IOException e) {

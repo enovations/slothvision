@@ -37,7 +37,7 @@ public class GStreamerUDPSRCGrabber {
 
 	}
 
-	public BufferedImage getCurrentFrame(){
+	public BufferedImage getCurrentFrame() {
 		return panel.currentImage;
 	}
 

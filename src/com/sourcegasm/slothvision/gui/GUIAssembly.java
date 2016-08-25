@@ -16,7 +16,7 @@ public class GUIAssembly {
 	private GStreamerUDPSRCGrabber src2 = null;
 	public static boolean running = true;
 
-	public GUIAssembly(GStreamerUDPSRCGrabber src1, GStreamerUDPSRCGrabber src2){
+	public GUIAssembly(GStreamerUDPSRCGrabber src1, GStreamerUDPSRCGrabber src2) {
 		this.src1 = src1;
 		this.src2 = src2;
 
@@ -27,25 +27,25 @@ public class GUIAssembly {
 		uiUpdateThread.start();
 	}
 
-	private void updateAssembly(){
+	private void updateAssembly() {
 
-		while(running){
+		while (running) {
 			BufferedImage src_vid1;
 			BufferedImage src_vid2;
 
 			src_vid1 = src1.getCurrentFrame();
 			src_vid2 = src2.getCurrentFrame();
 
-			if(src_vid1==null){
+			if (src_vid1 == null) {
 				src_vid1 = src_vid2;
 			}
 
-			if(src_vid2==null){
+			if (src_vid2 == null) {
 				src_vid2 = src1.getCurrentFrame();
 				src_vid1 = src_vid2;
 			}
 
-			if(src_vid1==null){
+			if (src_vid1 == null) {
 				BufferedImage empty = new BufferedImage(900, 720, BufferedImage.TYPE_INT_ARGB);
 				src_vid1 = empty;
 				src_vid2 = empty;
@@ -68,7 +68,7 @@ public class GUIAssembly {
 
 	}
 
-	public void showAssembly(){
+	public void showAssembly() {
 		window.start();
 	}
 

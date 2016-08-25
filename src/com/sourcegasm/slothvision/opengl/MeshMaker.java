@@ -64,8 +64,8 @@ public class MeshMaker {
 			final float deltaY = (mesh[++i] - centerY) / d;
 
 			final float dstR = (float) Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-			final float srcR = (paramA * dstR * dstR * dstR + calibration * dstR * dstR + paramC * dstR + paramD)
-					* dstR;
+			final float srcR =
+					(paramA * dstR * dstR * dstR + calibration * dstR * dstR + paramC * dstR + paramD) * dstR;
 
 			final float factor = Math.abs(dstR / srcR);
 

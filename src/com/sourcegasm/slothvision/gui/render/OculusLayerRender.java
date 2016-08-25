@@ -4,7 +4,8 @@ import java.awt.image.BufferedImage;
 
 public class OculusLayerRender {
 
-	public static SBSBufferedImage renderAllLayersSBS(BufferedImage l_source, BufferedImage r_source, BufferedImage osdRender) {
+	public static SBSBufferedImage renderAllLayersSBS(BufferedImage l_source, BufferedImage r_source,
+			BufferedImage osdRender) {
 
 		final int imageW = l_source.getWidth();
 		final int imageH = l_source.getHeight();
@@ -15,8 +16,8 @@ public class OculusLayerRender {
 		leftEye.getGraphics().drawImage(l_source, 0, 0, imageW, imageH, null);
 		rightEye.getGraphics().drawImage(r_source, 0, 0, imageW, imageH, null);
 
-		leftEye.getGraphics().drawImage(osdRender, 25, 0, imageW, imageH, null);
-		rightEye.getGraphics().drawImage(osdRender, -25, 0, imageW, imageH, null);
+		leftEye.getGraphics().drawImage(osdRender, 40, 0, imageW, imageH, null);
+		rightEye.getGraphics().drawImage(osdRender, -40, 0, imageW, imageH, null);
 
 		return new SBSBufferedImage(rightEye, leftEye);
 	}
