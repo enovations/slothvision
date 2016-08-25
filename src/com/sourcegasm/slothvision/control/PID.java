@@ -14,9 +14,9 @@ public class PID {
     float integration;
     int direction = 1;
 
-    int imax;
+    float imax;
 
-    public PID(float p, float i, float d, int imax, int direction) {
+    public PID(float p, float i, float d, float imax, int direction) {
         this.p = p;
         this.i = i;
         this.d = d;

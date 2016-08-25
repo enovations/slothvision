@@ -15,7 +15,9 @@ public class MainController implements Runnable {
 
 	private LowPassFilter panFilter = new LowPassFilter(2);
 	private LowPassFilter tiltFilter = new LowPassFilter(2);
-    private PID yaw = new PID(0.0001f, 0, 0, 0, PID.Direction.REVERSED);
+
+    private PID yaw = new PID(0.0016f, 0, 0, 0, PID.Direction.NORMAL);
+	private PID speed = new PID(0.95f, 0.0001f, 0, 0.1f, PID.Direction.REVERSED);
 
 	ModeSwitcher switcher = new ModeSwitcher();
 
@@ -68,8 +70,18 @@ public class MainController implements Runnable {
 				}
 
 			}else if(Launcher.piROSConnector.data.mode == 1) {
-                control.steer = yaw.calculate(Launcher.piROSConnector.data.marker_x, 150);
-                System.out.println(control.steer);
+				if(Launcher.piROSConnector.data.marker_x!=0 && Launcher.piROSConnector.data.marker_distance!=0) {
+					control.steer = yaw.calculate(Launcher.piROSConnector.data.marker_x, 450);
+					double val = (1.0/Launcher.piROSConnector.data.marker_distance)*100.0;
+					double speedVal = 0;
+					if(!(val < 0.5 || val>1.4)){
+						speedVal = speed.calculate((float)val,0.9f);
+					}
+					System.out.println(speedVal);
+					control.speed = Limiter.limitValues(speedVal, 0.8);
+				}else{
+					control.speed = control.steer = 0;
+				}
             }
 
 			//send data updates

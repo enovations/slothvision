@@ -32,10 +32,10 @@ public class Launcher {
             e.printStackTrace();
         }
 
-        PiCamera camera = new PiCamera("wlo1");
+        PiCamera camera = new PiCamera("wlp2s0");
         camera.run();
 
-        piROSConnector = new PiROSConnector("wlo1");
+        piROSConnector = new PiROSConnector("wlp2s0");
         piROSConnector.runConnector();
 
         GStreamerUDPSRCGrabber.initGST(args);
