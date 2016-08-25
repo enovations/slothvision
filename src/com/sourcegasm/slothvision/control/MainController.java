@@ -2,17 +2,16 @@ package com.sourcegasm.slothvision.control;
 
 import com.sourcegasm.slothvision.Launcher;
 import com.sourcegasm.slothvision.oculus.Euler;
-import org.lwjgl.openal.LOKIAudioChannel;
 
 public class MainController implements Runnable {
 
 	private Thread thread = new Thread(this);
-	ROSControl control = null;
+	private ROSControl control = null;
 
 	public static boolean running = true;
 
-	LowPassFilter panFilter = new LowPassFilter(2);
-	LowPassFilter tiltFilter = new LowPassFilter(2);
+	private LowPassFilter panFilter = new LowPassFilter(2);
+	private LowPassFilter tiltFilter = new LowPassFilter(2);
 
 	public MainController() {
 
@@ -29,7 +28,7 @@ public class MainController implements Runnable {
 			Euler euler = Launcher.hmdSensors.getEulerAngles();
 			if(euler!=null){
 				control.pan = panFilter.calculate(euler.yaw*80.0);
-				control.tilt = tiltFilter.calculate(euler.pitch*-90.0);
+				control.tilt = Limiter.limitValues(tiltFilter.calculate(euler.pitch*-90.0), 3500);
 			}
 
 			control.speed = Launcher.joystick.left_ud;
@@ -40,7 +39,9 @@ public class MainController implements Runnable {
 
 			try {
 				milis = System.currentTimeMillis() - milis;
-				Thread.sleep(30-milis);
+				int sleep = (int) (30-milis);
+				if(sleep>0)
+					Thread.sleep(sleep);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
