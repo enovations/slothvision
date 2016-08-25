@@ -51,6 +51,7 @@ public class Launcher {
 			MainController.running = false;
 		}));
 
+
 		MainController controller = new MainController();
 		controller.start();
 
@@ -58,8 +59,9 @@ public class Launcher {
 			JOptionPane.showMessageDialog(null, "<html><h2>Sloth went full John Cena!</h2>Sloth controller was not able to talk to sloth.", "Sloth error", JOptionPane.ERROR_MESSAGE);
 		}
 
-		GUIAssembly assembly = new GUIAssembly(src1,src2);
+        GUIAssembly assembly = new GUIAssembly(src1,src2);
 		assembly.showAssembly();
+
 
 	}
 

@@ -31,7 +31,7 @@ public class OpenGLWindow {
 	int lid, rid;
 
 	public OpenGLWindow() {
-		keyCallback = new GLFWKeyCallback() {
+        keyCallback = new GLFWKeyCallback() {
 			@Override public void invoke(long arg0, int arg1, int arg2, int arg3, int arg4) {
 				if (arg1 == GLFW_KEY_ESCAPE && arg3 == GLFW_PRESS) {
 					running = false;
@@ -83,9 +83,9 @@ public class OpenGLWindow {
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-		window = glfwCreateWindow(width, height, "SlothVision", glfwGetMonitors().get(2), NULL);
+		//window = glfwCreateWindow(width, height, "SlothVision", glfwGetMonitors().get(2), NULL);
 		//window = glfwCreateWindow(width, height, "SlothVision", glfwGetPrimaryMonitor(), NULL);
-		//window = glfwCreateWindow(width, height, "SlothVision", NULL, NULL);
+		window = glfwCreateWindow(width, height, "SlothVision", NULL, NULL);
 
 		if (window == NULL) {
 			System.err.println("Could not create our Window!");
@@ -100,7 +100,7 @@ public class OpenGLWindow {
 
 		glfwSetKeyCallback(window, keyCallback);
 
-		BufferedImage texture = new BufferedImage(900,720, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage texture = new BufferedImage(900,720, BufferedImage.TYPE_INT_ARGB);
 
 		leftImage = texture;
 		rightImage = texture;
