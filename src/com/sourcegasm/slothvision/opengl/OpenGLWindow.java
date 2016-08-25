@@ -100,7 +100,7 @@ public class OpenGLWindow {
 
 		glfwSetKeyCallback(window, keyCallback);
 
-		BufferedImage texture = new BufferedImage(900,720, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage texture = new BufferedImage(900, 720, BufferedImage.TYPE_INT_ARGB);
 
 		leftImage = texture;
 		rightImage = texture;
@@ -121,7 +121,6 @@ public class OpenGLWindow {
 		// desno levo desno gor desno desno desno gor
 
 		float maxRobotSpeed = 1.0f;
-		float maxGimbalo = 500;
 
 		glfwPollEvents();
 
@@ -129,7 +128,7 @@ public class OpenGLWindow {
 
 		if (buffer != null) {
 
-			float robotLeftRight = buffer.get() * -1 * maxRobotSpeed;
+			float robotLeftRight = buffer.get() * -1 * 0.5f;
 			if (robotLeftRight < 0.01 && robotLeftRight > -0.01) {
 				robotLeftRight = 0;
 			}
@@ -137,9 +136,6 @@ public class OpenGLWindow {
 			if (robotUpDown < 0.01 && robotUpDown > -0.01) {
 				robotUpDown = 0;
 			}
-
-			//float gimbaloLeftRight = buffer.get() * maxGimbalo;
-			//float gimbaloUpDown = buffer.get() * maxGimbalo;
 
 			//joystick
 			Launcher.joystick.left_lr = robotLeftRight;
@@ -154,10 +150,12 @@ public class OpenGLWindow {
 
 		if (buttonBuffer != null) {
 
-			//buttonBuffer.get(7) 0 ali 1
+			Launcher.joystick.button_drive = buttonBuffer.get(7);
 
 		} else {
-			//failsafe
+
+			Launcher.joystick.button_drive = 0;
+
 		}
 
 	}

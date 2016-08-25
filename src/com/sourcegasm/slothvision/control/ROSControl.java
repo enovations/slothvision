@@ -11,7 +11,7 @@ class ROSControl {
 
 	double speed, steer, pan, tilt;
 
-	ROSControl(){
+	ROSControl() {
 		try {
 			sock = new DatagramSocket();
 			String host = "192.168.0.100";
@@ -21,7 +21,7 @@ class ROSControl {
 		}
 	}
 
-	void sendUpdate(){
+	void sendUpdate() {
 		try {
 			String robotMessageString = "r " + speed + " " + steer;
 

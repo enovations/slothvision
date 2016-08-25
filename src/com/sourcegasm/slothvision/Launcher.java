@@ -41,7 +41,7 @@ public class Launcher {
 		GStreamerUDPSRCGrabber src1 = new GStreamerUDPSRCGrabber(5000);
 		GStreamerUDPSRCGrabber src2 = new GStreamerUDPSRCGrabber(5001);
 
-		Runtime.getRuntime().addShutdownHook(new Thread(()->{
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
 			hmdSensors.kill();
 			src1.killPipe();
 			src2.killPipe();
@@ -54,16 +54,18 @@ public class Launcher {
 		MainController controller = new MainController();
 		controller.start();
 
-		if(!isSlothAccessible()){
-			JOptionPane.showMessageDialog(null, "<html><h2>Sloth went full John Cena!</h2>Sloth controller was not able to talk to sloth.", "Sloth error", JOptionPane.ERROR_MESSAGE);
+		if (!isSlothAccessible()) {
+			JOptionPane.showMessageDialog(null,
+					"<html><h2>Sloth went full John Cena!</h2>Sloth controller was not able to talk to sloth.",
+					"Sloth error", JOptionPane.ERROR_MESSAGE);
 		}
 
-		GUIAssembly assembly = new GUIAssembly(src1,src2);
+		GUIAssembly assembly = new GUIAssembly(src1, src2);
 		assembly.showAssembly();
 
 	}
 
-	private static boolean isSlothAccessible(){
+	private static boolean isSlothAccessible() {
 		try {
 			return InetAddress.getByName("192.168.0.100").isReachable(500);
 		} catch (IOException e) {

@@ -26,21 +26,25 @@ public class MainController implements Runnable {
 			long milis = System.currentTimeMillis();
 
 			Euler euler = Launcher.hmdSensors.getEulerAngles();
-			if(euler!=null){
-				control.pan = panFilter.calculate(euler.yaw*80.0);
-				control.tilt = Limiter.limitValues(tiltFilter.calculate(euler.pitch*-90.0), 3500);
+			if (euler != null) {
+				control.pan = panFilter.calculate(euler.yaw * 80.0);
+				control.tilt = Limiter.limitValues(tiltFilter.calculate(euler.pitch * -90.0), 3500);
 			}
 
-			control.speed = Launcher.joystick.left_ud;
-			control.steer = Launcher.joystick.left_lr;
+			if (Launcher.joystick.button_drive == 1) {
+				control.speed = Launcher.joystick.left_ud;
+				control.steer = Launcher.joystick.left_lr;
+			} else {
+				control.speed = control.steer = 0;
+			}
 
 			//send data updates
 			control.sendUpdate();
 
 			try {
 				milis = System.currentTimeMillis() - milis;
-				int sleep = (int) (30-milis);
-				if(sleep>0)
+				int sleep = (int) (30 - milis);
+				if (sleep > 0)
 					Thread.sleep(sleep);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
