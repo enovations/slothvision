@@ -36,6 +36,15 @@ public class MainController implements Runnable {
 
 			if(buttons!=null) {
 
+				int curr1 = buttons.get(1);
+				if(oldState1 != curr1){
+					if(curr1==1){
+						switcher.nextMode();
+					}
+				}
+
+				oldState1 = curr1;
+
 				//while (buttons.hasRemaining())
 				//	System.out.print(buttons.get());
 				//System.out.println();
