@@ -1,9 +1,8 @@
-package com.sourcegasm.slothvision.picamera;
+package com.sourcegasm.slothvision.pimanagement;
 
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
+import java.net.*;
+import java.util.Enumeration;
 
 public class PiConnectorInstance {
     private String host = "192.168.0.100";
@@ -61,4 +60,20 @@ public class PiConnectorInstance {
     public void kill() {
         sendMessage("kill");
     }
+
+    public static String getIp(String ifName) throws SocketException {
+        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+            NetworkInterface intf = en.nextElement();
+            if (intf.getName().equals(ifName)) {
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                    String asdf = enumIpAddr.nextElement().toString();
+                    if (asdf.contains(".")) {
+                        return asdf.substring(1);
+                    }
+                }
+            }
+        }
+        throw new SocketException();
+    }
+
 }

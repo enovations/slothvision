@@ -1,5 +1,6 @@
 package com.sourcegasm.slothvision.gui;
 
+import com.sourcegasm.slothvision.Launcher;
 import com.sourcegasm.slothvision.gstreamer.GStreamerUDPSRCGrabber;
 import com.sourcegasm.slothvision.gui.render.OSDRender;
 import com.sourcegasm.slothvision.gui.render.OculusLayerRender;
@@ -50,7 +51,7 @@ public class GUIAssembly {
 				src_vid2 = empty;
 			}
 
-			BufferedImage osd = OSDRender.renderOSD();
+			BufferedImage osd = OSDRender.renderOSD(Launcher.piROSConnector.data);
 
 			final SBSBufferedImage sbsimage = OculusLayerRender.renderAllLayersSBS(src_vid1, src_vid2, osd);
 

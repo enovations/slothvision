@@ -4,30 +4,29 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-public class ROSControl {
-
-	private String host = "192.168.0.100";
-	private int port = 12345;
+class ROSControl {
 
 	private DatagramSocket sock;
 	private InetAddress IPAddress;
 
-	public double speed, steer, pan, tilt;
+	double speed, steer, pan, tilt;
 
-	public ROSControl(){
+	ROSControl(){
 		try {
 			sock = new DatagramSocket();
+			String host = "192.168.0.100";
 			IPAddress = InetAddress.getByName(host);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void sendUpdate(){
+	void sendUpdate(){
 		try {
 			String robotMessageString = "r " + speed + " " + steer;
 
 			byte[] sendData = robotMessageString.getBytes();
+			int port = 8008;
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, port);
 			sock.send(sendPacket);
 

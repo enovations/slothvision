@@ -1,4 +1,4 @@
-package com.sourcegasm.slothvision.picamera;
+package com.sourcegasm.slothvision.pimanagement;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -21,7 +21,7 @@ public class PiCamera {
             System.out.println("COULD NOT CONNECT TO RBPI2 (192.168.0.51)");
         }
         try {
-            String ip = getIp(netInterface);
+            String ip = PiConnectorInstance.getIp(netInterface);
             instance1.setIPAddress(ip);
             instance2.setIPAddress(ip);
             instance1.setPort(5000);
@@ -32,8 +32,8 @@ public class PiCamera {
     }
 
     public void kill(){
-        instance1.run();
-        instance2.run();
+        instance1.kill();
+        instance2.kill();
     }
 
     public void run(){
@@ -41,18 +41,4 @@ public class PiCamera {
         instance2.run();
     }
 
-    private static String getIp(String ifName) throws SocketException {
-        for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-            NetworkInterface intf = en.nextElement();
-            if (intf.getName().equals(ifName)) {
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
-                    String asdf = enumIpAddr.nextElement().toString();
-                    if (asdf.contains(".")) {
-                        return asdf.substring(1);
-                    }
-                }
-            }
-        }
-        throw new SocketException();
-    }
 }

@@ -1,5 +1,7 @@
 package com.sourcegasm.slothvision.gui.render;
 
+import com.sourcegasm.slothvision.pimanagement.PiROSData;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,7 +19,7 @@ public class OSDRender {
 		}
 	}
 
-	public static BufferedImage renderOSD() {
+	public static BufferedImage renderOSD(PiROSData data) {
 		final int imageW = 900;
 		final int imageH = 720;
 
@@ -43,11 +45,11 @@ public class OSDRender {
 			g.drawString((int) (navData.getRoll()) + "° # " + ((int) navData.getPitch()) + "°", 610, imageH - 220 + 34);
 
 			g.setColor(new Color(255, 255, 255, 255));
-			g.drawString(mainController.controlMode.toString(), 170, 200);*/
+			g.drawString(mainController.controlMode.toString(), 170, 200);
 
 			g.setFont(g.getFont().deriveFont(42.0f));
 
-			/*if (!navData.isFlying() && !timer.show)
+			if (!navData.isFlying() && !timer.show)
 				g.drawString("Press L2 button to take off", 205, 370);
 			else if (timer.show) {
 				g.setFont(font.deriveFont(68.0f));

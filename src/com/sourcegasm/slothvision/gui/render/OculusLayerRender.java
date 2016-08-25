@@ -15,8 +15,8 @@ public class OculusLayerRender {
 		leftEye.getGraphics().drawImage(l_source, 0, 0, imageW, imageH, null);
 		rightEye.getGraphics().drawImage(r_source, 0, 0, imageW, imageH, null);
 
-		leftEye.getGraphics().drawImage(osdRender, 18, 0, imageW, imageH, null);
-		rightEye.getGraphics().drawImage(osdRender, -18, 0, imageW, imageH, null);
+		leftEye.getGraphics().drawImage(osdRender, 25, 0, imageW, imageH, null);
+		rightEye.getGraphics().drawImage(osdRender, -25, 0, imageW, imageH, null);
 
 		return new SBSBufferedImage(rightEye, leftEye);
 	}
