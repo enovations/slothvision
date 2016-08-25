@@ -63,6 +63,11 @@ public class SlothEyes {
             double mom10 = cvGetSpatialMoment(moments, 1, 0);
             double mom01 = cvGetSpatialMoment(moments, 0, 1);
             double area = cvGetCentralMoment(moments, 0, 0);
+
+            if (area < 50){
+                return new LocationData(0, 0);
+            }
+
             int posX = (int) (mom10 / area);
             int posY = (int) (mom01 / area);
 
