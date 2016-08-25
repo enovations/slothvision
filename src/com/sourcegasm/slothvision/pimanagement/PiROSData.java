@@ -7,6 +7,7 @@ public class PiROSData {
 	public double battery = 0.0;
 	public CopyOnWriteArrayList<Point> points = new CopyOnWriteArrayList<>();
 	public double yaw, x, y;
+	public int mode = 0;
 
 
 	public static class Point {

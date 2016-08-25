@@ -1,6 +1,7 @@
 package com.sourcegasm.slothvision.gui.render;
 
 import com.sourcegasm.slothvision.Launcher;
+import com.sourcegasm.slothvision.control.modes.ModeSwitcher;
 import com.sourcegasm.slothvision.pimanagement.PiROSData;
 
 import javax.swing.*;
@@ -38,7 +39,7 @@ public class OSDRender {
 				46, 18, null);
 		g.drawString(new DecimalFormat("#.##").format(data.battery) + "V", 310, 222 + 18);
 
-		g.drawString("Mode: manual", 470, 222 + 18);
+		g.drawString("Mode: "+ ModeSwitcher.getModeName(Launcher.piROSConnector.data.mode), 470, 222 + 18);
 
 		g.setColor(new Color(241, 246, 255, 116));
 		g.drawLine(250, 249, imageW - 250, 249);

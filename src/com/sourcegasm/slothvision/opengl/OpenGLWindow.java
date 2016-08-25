@@ -152,6 +152,7 @@ public class OpenGLWindow {
 		if (buttonBuffer != null) {
 
 			Launcher.joystick.button_drive = buttonBuffer.get(0);
+			Launcher.joystick.buttonBuffer = buttonBuffer;
 
 		} else {
 

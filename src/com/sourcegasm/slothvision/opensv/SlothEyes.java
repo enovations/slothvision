@@ -52,9 +52,8 @@ public class SlothEyes {
             Mat result = new Mat();
             bitwise_or(new Mat(thrs_red), new Mat(thrs_green), result);
 
-
-            /*OpenCVFrameConverter converter = new OpenCVFrameConverter.ToIplImage();
-            canvas.showImage(converter.convert(result));*/
+            //OpenCVFrameConverter converter = new OpenCVFrameConverter.ToIplImage();
+            //canvas.showImage(converter.convert(result));
 
             CvMoments moments = new CvMoments();
 
@@ -64,9 +63,13 @@ public class SlothEyes {
             double mom01 = cvGetSpatialMoment(moments, 0, 1);
             double area = cvGetCentralMoment(moments, 0, 0);
 
-            if (area < 50){
-                return new LocationData(0, 0);
-            }
+            //if (area < 50){
+            //    return new LocationData(0, 0);
+            //
+            //
+            //}
+
+            System.out.println(mom01);
 
             int posX = (int) (mom10 / area);
             int posY = (int) (mom01 / area);

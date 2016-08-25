@@ -26,7 +26,7 @@ public class SlothEyesController {
 
 
         double distance = Math.abs(data1.x - data2.x);
-        System.out.println(distance);
+        System.out.println(data1.x);
         return 0;
     }
 }
