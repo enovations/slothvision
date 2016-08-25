@@ -46,16 +46,4 @@ public class TextureLoader {
 		return textureID;
 	}
 
-	public static BufferedImage loadImage(String loc) {
-		try {
-			File file = new File(loc);
-
-			BufferedImage image = ImageIO.read(file);
-			return image;
-		} catch (final Exception e) {
-			e.printStackTrace();
-		}
-
-		return null;
-	}
 }

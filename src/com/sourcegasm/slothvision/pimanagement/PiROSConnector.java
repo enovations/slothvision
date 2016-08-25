@@ -53,14 +53,13 @@ public class PiROSConnector implements Runnable {
 				String sentence = new String(receivePacket.getData(), 0, receivePacket.getLength());
 
 				if(sentence.startsWith("battery: ")){
-					float battery = Float.parseFloat(sentence.replace("battery: ","").trim());
-					System.out.println(battery);
+					data.battery = Float.parseFloat(sentence.replace("battery: ","").trim());
 				}else{
 					System.out.println("Unknown message from ros pi: "+sentence);
 				}
 			}
 		} catch (IOException e) {
-			System.out.println(e);
+			System.out.println("Connection error! -42");
 		}
 
 	}

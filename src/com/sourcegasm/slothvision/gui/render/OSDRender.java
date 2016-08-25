@@ -2,10 +2,12 @@ package com.sourcegasm.slothvision.gui.render;
 
 import com.sourcegasm.slothvision.pimanagement.PiROSData;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class OSDRender {
 
@@ -34,10 +36,10 @@ public class OSDRender {
 			g.drawLine(0, imageH - 220 + 41, imageW, imageH - 220 + 41);
 			g.setColor(new Color(255, 255, 255, 255));
 			g.setFont(g.getFont().deriveFont(36.0f));
-			/*g.drawImage(new ImageIcon("./res/batt_" + ((navData.getBattery() < 25) ? "off" : "on") + ".png").getImage(),
-					120, imageH - 218, null);
-			g.drawString(navData.getBattery() + "%", 196, imageH - 220 + 34);
-			g.drawImage(new ImageIcon("./res/h.png").getImage(), 312, imageH - 218, null);
+			g.drawImage(new ImageIcon("./res/batt_" + ((data.battery < 11.4) ? "off" : "on") + ".png").getImage(),
+					130, imageH - 218, 80, 28, null);
+			g.drawString(new DecimalFormat("#.##").format(data.battery) + "V", 206, imageH - 220 + 34);
+			/*g.drawImage(new ImageIcon("./res/h.png").getImage(), 312, imageH - 218, null);
 			g.drawString(((int) (navData.getAltitude() * 100.0f)) + "cm", 358, imageH - 220 + 34);
 			g.drawImage(new ImageIcon("./res/" + ((navData.isFlying()) ? "on" : "off") + ".png").getImage(), 490,
 					imageH - 218, null);

@@ -5,6 +5,7 @@ import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GL;
 
 import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -99,7 +100,7 @@ public class OpenGLWindow {
 
 		glfwSetKeyCallback(window, keyCallback);
 
-		BufferedImage texture = TextureLoader.loadImage("res/grid.png");
+		BufferedImage texture = new BufferedImage(900,720, BufferedImage.TYPE_INT_ARGB);
 
 		leftImage = texture;
 		rightImage = texture;
@@ -144,7 +145,21 @@ public class OpenGLWindow {
 			Launcher.joystick.left_lr = robotLeftRight;
 			Launcher.joystick.left_ud = robotUpDown;
 
+		} else {
+			Launcher.joystick.left_lr = 0;
+			Launcher.joystick.left_ud = 0;
 		}
+
+		ByteBuffer buttonBuffer = glfwGetJoystickButtons(GLFW_JOYSTICK_1);
+
+		if (buttonBuffer != null) {
+
+			//buttonBuffer.get(7) 0 ali 1
+
+		} else {
+			//failsafe
+		}
+
 	}
 
 	public void render() {
