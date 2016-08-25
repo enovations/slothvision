@@ -17,24 +17,29 @@ import static org.bytedeco.javacpp.opencv_imgproc.*;
 
 public class SlothEyes {
 
-    static int aa, bb, cc, dd, hh, ii;
+    private int aa, bb, cc, dd, hh, ii;
 
-    static CvScalar blue_min = cvScalar(90, 156, 92, 0);
-    static CvScalar blue_max = cvScalar(118, 255, 193, 0);
+    private CvScalar blue_min = cvScalar(44, 89, 16, 0);
+    private CvScalar blue_max = cvScalar(113, 255, 119, 0);
 
-    static CvScalar red_min = cvScalar(165, 136, 122, 0);
-    static CvScalar red_max = cvScalar(180, 255, 255, 0);
+    private CvScalar red_min = cvScalar(33, 162, 51, 0);
+    private CvScalar red_max = cvScalar(53, 255, 200, 0);
 
-    static JSlider sl11 = new JSlider(0, 180, 0);
-    static JSlider sl21 = new JSlider(0, 255, 0);
-    static JSlider sl31 = new JSlider(0, 255, 0);
-    static JSlider sl12 = new JSlider(0, 180, 0);
-    static JSlider sl22 = new JSlider(0, 255, 0);
-    static JSlider sl32 = new JSlider(0, 255, 0);
+    private JSlider sl11 = new JSlider(0, 180, 0);
+    private JSlider sl21 = new JSlider(0, 255, 0);
+    private JSlider sl31 = new JSlider(0, 255, 0);
+    private JSlider sl12 = new JSlider(0, 180, 0);
+    private JSlider sl22 = new JSlider(0, 255, 0);
+    private JSlider sl32 = new JSlider(0, 255, 0);
 
     private static CanvasFrame canvas = new CanvasFrame("asdfasdf", 1); //gamma = 1
 
-    public static LocationData getMarkerData(BufferedImage bufferedimg) {
+    public SlothEyes() {
+        //for debuging
+        //load();
+    }
+
+    public LocationData getMarkerData(BufferedImage bufferedimg) {
         if (bufferedimg != null) {
 
             IplImage sourceRGB = convertBuffToIplImage(bufferedimg);
@@ -52,6 +57,9 @@ public class SlothEyes {
             Mat result = new Mat();
             bitwise_or(new Mat(thrs_red), new Mat(thrs_green), result);
 
+//            OpenCVFrameConverter converter = new OpenCVFrameConverter.ToIplImage();
+//            canvas.showImage(converter.convert(thrs_red));
+
             //OpenCVFrameConverter converter = new OpenCVFrameConverter.ToIplImage();
             //canvas.showImage(converter.convert(result));
 
@@ -63,13 +71,9 @@ public class SlothEyes {
             double mom01 = cvGetSpatialMoment(moments, 0, 1);
             double area = cvGetCentralMoment(moments, 0, 0);
 
-            //if (area < 50){
-            //    return new LocationData(0, 0);
-            //
-            //
-            //}
-
-            System.out.println(mom01);
+            if (area < 50) {
+                return new LocationData(0, 0);
+            }
 
             int posX = (int) (mom10 / area);
             int posY = (int) (mom01 / area);
@@ -80,7 +84,7 @@ public class SlothEyes {
         return new LocationData(0, 0);
     }
 
-    static IplImage hsvThreshold(IplImage orgImg, CvScalar min, CvScalar max) {
+    private static IplImage hsvThreshold(IplImage orgImg, CvScalar min, CvScalar max) {
         // CvScalar s=cvGet2D(orgImg,120,160);
         // System.out.println( "H:"+ s.val(0) + " S:" + s.val(1) + " V:" +
         // s.val(2) + " X:" + s.val(3));//Print values
@@ -91,7 +95,7 @@ public class SlothEyes {
         return imgThreshold;
     }
 
-    public static void load() {
+    public void load() {
 
         canvas.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 
@@ -176,7 +180,11 @@ public class SlothEyes {
         });
     }
 
-    public static IplImage convertBuffToIplImage(BufferedImage img){
+    private static IplImage convertBuffToIplImage(BufferedImage original) {
+        //convert to bgr
+        BufferedImage img = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
+        Graphics g = img.getGraphics();
+        g.drawImage(original, 0, 0, null);
         Java2DFrameConverter converter1 = new Java2DFrameConverter();
         OpenCVFrameConverter.ToIplImage converter2 = new OpenCVFrameConverter.ToIplImage();
         IplImage iploriginal = converter2.convert(converter1.convert(img));

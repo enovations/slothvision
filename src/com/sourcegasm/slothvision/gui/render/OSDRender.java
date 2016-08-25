@@ -51,7 +51,8 @@ public class OSDRender {
 		g.drawLine(imageW / 2, 260, imageW / 2, 220);
 
 		g.setColor(new Color(22, 255, 0, 117));
-		g.fillRect(imageW / 2 - 9 + (int) Launcher.hmdSensors.getEulerAngles().yaw, 245, 18, 18);
+		if (Launcher.hmdSensors.getEulerAngles() != null)
+			g.fillRect(imageW / 2 - 9 + (int) Launcher.hmdSensors.getEulerAngles().yaw, 245, 18, 18);
 
 		/*g.setColor(new Color(0, 0, 0, 141));
 		g.fillRect(200, 220, 120, 90);
@@ -74,7 +75,8 @@ public class OSDRender {
 
 		g.rotate(0, (900-390+75), (720-330+50));
 
-		g.rotate(Math.toRadians(Launcher.hmdSensors.getEulerAngles().yaw), (imageW-391+90), (imageH-334+70));
+		if (Launcher.hmdSensors.getEulerAngles() != null)
+			g.rotate(Math.toRadians(Launcher.hmdSensors.getEulerAngles().yaw), (imageW-391+90), (imageH-334+70));
 		g.drawImage(fov.getImage(), imageW - 391, imageH - 334, null);
 
 		g.setClip(0,0,imageW, imageH);

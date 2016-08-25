@@ -15,6 +15,7 @@ public class MainController implements Runnable {
 
 	private LowPassFilter panFilter = new LowPassFilter(2);
 	private LowPassFilter tiltFilter = new LowPassFilter(2);
+    private PID yaw = new PID(0.0001f, 0, 0, 0, PID.Direction.REVERSED);
 
 	ModeSwitcher switcher = new ModeSwitcher();
 
@@ -67,8 +68,9 @@ public class MainController implements Runnable {
 				}
 
 			}else if(Launcher.piROSConnector.data.mode == 1) {
-				//cv controls auto
-			}
+                control.steer = yaw.calculate(Launcher.piROSConnector.data.marker_x, 150);
+                System.out.println(control.steer);
+            }
 
 			//send data updates
 			control.sendUpdate();

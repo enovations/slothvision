@@ -8,9 +8,11 @@ public class PiROSData {
 	public CopyOnWriteArrayList<Point> points = new CopyOnWriteArrayList<>();
 	public double yaw, x, y;
 	public int mode = 0;
+	public int marker_distance;
+    public int marker_x;
 
 
-	public static class Point {
+    public static class Point {
 
 		public double x, y;
 
