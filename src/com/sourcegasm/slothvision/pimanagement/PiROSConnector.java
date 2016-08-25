@@ -60,7 +60,13 @@ public class PiROSConnector implements Runnable {
 					data.points
 							.add(new PiROSData.Point(Double.parseDouble(sentence.replace("sonar: ", "").split(" ")[0]),
 									Double.parseDouble(sentence.replace("sonar: ", "").split(" ")[1])));
-				} else {
+				} else if (sentence.startsWith("position: ")) {
+					data.x = Double.parseDouble(sentence.replace("position: ", "").split(" ")[0]);
+					data.y = Double.parseDouble(sentence.replace("position: ", "").split(" ")[1]);
+					data.yaw = Double.parseDouble(sentence.replace("position: ", "").split(" ")[2]);
+				}
+
+				else {
 					System.out.println("Unknown message from ros pi: " + sentence);
 				}
 			}

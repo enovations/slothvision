@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -150,7 +151,7 @@ public class OpenGLWindow {
 
 		if (buttonBuffer != null) {
 
-			Launcher.joystick.button_drive = buttonBuffer.get(7);
+			Launcher.joystick.button_drive = buttonBuffer.get(0);
 
 		} else {
 

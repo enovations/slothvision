@@ -14,6 +14,7 @@ public class OSDRender {
 
 	private static Font font;
 	static ImageIcon map = new ImageIcon("./res/map.png");
+	static ImageIcon fov = new ImageIcon("./res/fov.png");
 
 	static {
 		try {
@@ -37,6 +38,8 @@ public class OSDRender {
 				46, 18, null);
 		g.drawString(new DecimalFormat("#.##").format(data.battery) + "V", 310, 222 + 18);
 
+		g.drawString("Mode: manual", 470, 222 + 18);
+
 		g.setColor(new Color(241, 246, 255, 116));
 		g.drawLine(250, 249, imageW - 250, 249);
 		g.drawLine(250, 250, imageW - 250, 250);
@@ -57,18 +60,23 @@ public class OSDRender {
 			g.fillRect(260 - 2 + (int) (point.x * 10), 265 - 2 + (int) (point.y * 10), 4, 4);
 		}*/
 
-		g.setColor(new Color(0, 0, 0, 49));
-		g.fillRect(imageW - 350, imageH - 300, 130, 100);
+		//5cm je 1 pixel
+		// 1.0
+		//20px je 1 m
 
-		//2.5cm je 1 pixel
+		int offsetx = 0;
+		int offsety = 0;
 
-		//g.rotate(0.0);
-		g.clipRect(imageW - 350, imageH - 300, 130, 100);
+		g.clipRect(imageW - 390, imageH - 330, 180, 140);
+		g.rotate(data.yaw, (900-390+90), (720-330+70));
+		g.drawImage(repos(map.getImage(), offsetx+(int)(data.x*20), offsety+(int)(data.y*20)), imageW - 550, imageH - 500, null);
 
-		g.drawImage(map.getImage(), imageW - 350, imageH - 300, null);
+		g.rotate(0, (900-390+75), (720-330+50));
 
-		//after
-		g.setClip(null);
+		g.rotate(Math.toRadians(Launcher.hmdSensors.getEulerAngles().yaw), (imageW-391+90), (imageH-334+70));
+		g.drawImage(fov.getImage(), imageW - 391, imageH - 334, null);
+
+		g.setClip(0,0,imageW, imageH);
 
 			/*g.drawImage(new ImageIcon("./res/h.png").getImage(), 312, imageH - 218, null);
 			g.drawString(((int) (navData.getAltitude() * 100.0f)) + "cm", 358, imageH - 220 + 34);
@@ -95,6 +103,18 @@ public class OSDRender {
 			g.drawImage(new ImageIcon("./res/rotate.png").getImage(), imageW - 320, 130, null);*/
 
 		return osd;
+	}
+
+	private static BufferedImage repos(Image image, int x, int y){
+
+		BufferedImage retval = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+
+		Graphics g = retval.getGraphics();
+
+		g.drawImage(image, -x, -y, 800, 800, null);
+
+		return retval;
+
 	}
 
 }
