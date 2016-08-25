@@ -1,6 +1,9 @@
 package com.sourcegasm.slothvision.gui;
 
 import com.sourcegasm.slothvision.gstreamer.GStreamerUDPSRCGrabber;
+import com.sourcegasm.slothvision.gui.render.OSDRender;
+import com.sourcegasm.slothvision.gui.render.OculusLayerRender;
+import com.sourcegasm.slothvision.gui.render.SBSBufferedImage;
 import com.sourcegasm.slothvision.opengl.OpenGLWindow;
 
 import java.awt.image.BufferedImage;
@@ -41,10 +44,18 @@ public class GUIAssembly {
 				src_vid1 = src_vid2;
 			}
 
-			if(src_vid1!=null) {
-				window.leftImage = src_vid1;
-				window.rightImage = src_vid2;
+			if(src_vid1==null){
+				BufferedImage empty = new BufferedImage(900, 720, BufferedImage.TYPE_INT_ARGB);
+				src_vid1 = empty;
+				src_vid2 = empty;
 			}
+
+			BufferedImage osd = OSDRender.renderOSD();
+
+			final SBSBufferedImage sbsimage = OculusLayerRender.renderAllLayersSBS(src_vid1, src_vid2, osd);
+
+			window.leftImage = sbsimage.getLeftImage();
+			window.rightImage = sbsimage.getRightImage();
 
 			try {
 				Thread.sleep(30);
