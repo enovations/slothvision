@@ -66,7 +66,7 @@ public class Launcher {
 
         SlothEyesController slothEyesController = new SlothEyesController(assembly);
         while (true) {
-            slothEyesController.calculateDistance();
+			System.out.println(slothEyesController.calculateDistance());
             try {
                 Thread.sleep(50);
             } catch (Exception e) {
