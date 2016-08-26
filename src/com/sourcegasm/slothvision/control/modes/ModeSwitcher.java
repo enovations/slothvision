@@ -4,11 +4,11 @@ import com.sourcegasm.slothvision.Launcher;
 
 public class ModeSwitcher {
 
-	int mode = 0;
-	int maxMode = 1;
+	private int mode = 0;
 
 	public void nextMode() {
 
+		int maxMode = 2;
 		if (mode == maxMode) {
 			mode = 0;
 		} else {
@@ -23,9 +23,11 @@ public class ModeSwitcher {
 
 		switch (mode) {
 		case 0:
-			return "manual";
+			return "manual acc";
 		case 1:
-			return "follow";
+			return "manual fix";
+		case 2:
+			return "follow pt";
 		default:
 			return "unknown";
 		}

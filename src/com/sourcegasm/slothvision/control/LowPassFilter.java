@@ -1,9 +1,9 @@
 package com.sourcegasm.slothvision.control;
 
-public class LowPassFilter {
+class LowPassFilter {
 	private boolean first = true;
-	public double smoothedValue;
-	public double smoothing;
+	private double smoothedValue;
+	private double smoothing;
 
 	public LowPassFilter(double smoothing) {
 		this.smoothing = smoothing;
