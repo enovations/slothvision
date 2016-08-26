@@ -64,9 +64,7 @@ public class PiROSConnector implements Runnable {
 					data.x = Double.parseDouble(sentence.replace("position: ", "").split(" ")[0]);
 					data.y = Double.parseDouble(sentence.replace("position: ", "").split(" ")[1]);
 					data.yaw = Double.parseDouble(sentence.replace("position: ", "").split(" ")[2]);
-				}
-
-				else {
+				} else {
 					System.out.println("Unknown message from ros pi: " + sentence);
 				}
 			}
