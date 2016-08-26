@@ -19,6 +19,9 @@ public class MainController implements Runnable {
 	private PID yaw = new PID(0.0016f, 0, 0, 0, PID.Direction.NORMAL);
 	private PID speed = new PID(0.95f, 0.0001f, 0, 0.1f, PID.Direction.REVERSED);
 
+    private PID panPid = new PID(0.0016f, 0, 0, 0, PID.Direction.NORMAL);
+    private PID tiltPid = new PID(0.0016f, 0, 0, 0, PID.Direction.NORMAL);
+
 	private ModeSwitcher switcher = new ModeSwitcher();
 
 	private int oldState1 = 0;
@@ -96,7 +99,35 @@ public class MainController implements Runnable {
 					System.out.println(speedVal);
 					control.speed = Limiter.limitValues(speedVal, 0.8);
 				} else {
-					control.speed = control.steer = 0;
+					if (Launcher.joystick.button_drive == 1) {
+						control.speed = Launcher.joystick.left_ud;
+						control.steer = Launcher.joystick.left_lr;
+					} else {
+						control.speed = control.steer = 0;
+					}
+				}
+			} else if (Launcher.piROSConnector.data.mode == 3) {
+
+				if (Launcher.piROSConnector.data.marker_x != 0 && Launcher.piROSConnector.data.marker_distance != 0) {
+
+
+				    control.pan = panPid.calculate(Launcher.piROSConnector.data.marker_x, 450);
+					System.out.println(control.pan);
+
+				} else {
+
+					if (Launcher.joystick.button_drive == 1) {
+						control.speed = Launcher.joystick.left_ud;
+						control.steer = Launcher.joystick.left_lr;
+					} else {
+						control.speed = control.steer = 0;
+					}
+
+					Euler euler = Launcher.hmdSensors.getEulerAngles();
+					if (euler != null) {
+						control.pan = panFilter.calculate(euler.yaw * 80.0);
+						control.tilt = Limiter.limitValues(tiltFilter.calculate(euler.pitch * -90.0), 3500);
+					}
 				}
 			}
 

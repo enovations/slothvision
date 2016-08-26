@@ -19,11 +19,11 @@ public class SlothEyes {
 
 	private int aa, bb, cc, dd, hh, ii;
 
-	private CvScalar blue_min = cvScalar(44, 89, 16, 0);
-	private CvScalar blue_max = cvScalar(113, 255, 119, 0);
+	private CvScalar blue_min = cvScalar(79, 41, 44, 0);
+	private CvScalar blue_max = cvScalar(132, 250, 123, 0);
 
-	private CvScalar red_min = cvScalar(33, 162, 51, 0);
-	private CvScalar red_max = cvScalar(53, 255, 200, 0);
+	private CvScalar green_min = cvScalar(35, 81, 19, 0);
+	private CvScalar green_max = cvScalar(80, 255, 112, 0);
 
 	private JSlider sl11 = new JSlider(0, 180, 0);
 	private JSlider sl21 = new JSlider(0, 255, 0);
@@ -48,17 +48,23 @@ public class SlothEyes {
 
 			cvCvtColor(sourceRGB, source, CV_BGR2HSV);
 
-			IplImage thrs_green = hsvThreshold(source, blue_min, blue_max);
-			IplImage thrs_red = hsvThreshold(source, red_min, red_max);
+			IplImage thrs_blue = hsvThreshold(source, blue_min, blue_max);
+			IplImage thrs_green = hsvThreshold(source, green_min, green_max);
 
-			cvErode(thrs_green, thrs_green, null, 15);
-			cvErode(thrs_red, thrs_red, null, 15);
+			/*if(showImage) {
+				OpenCVFrameConverter converter = new OpenCVFrameConverter.ToIplImage();
+				canvas.showImage(converter.convert(thrs_green));
+
+			}*/
+
+			cvErode(thrs_blue, thrs_blue, null, 8);
+			cvErode(thrs_green, thrs_green, null, 8);
 
 			Mat result = new Mat();
-			bitwise_or(new Mat(thrs_red), new Mat(thrs_green), result);
+			bitwise_or(new Mat(thrs_green), new Mat(thrs_blue), result);
 
 			//            OpenCVFrameConverter converter = new OpenCVFrameConverter.ToIplImage();
-			//            canvas.showImage(converter.convert(thrs_red));
+			//            canvas.showImage(converter.convert(thrs_green));
 
 			if(showImage) {
 				OpenCVFrameConverter converter = new OpenCVFrameConverter.ToIplImage();
@@ -131,48 +137,48 @@ public class SlothEyes {
 			@Override public void stateChanged(ChangeEvent arg0) {
 				l11.setText("H min: " + sl11.getValue());
 				aa = sl11.getValue();
-				red_min = cvScalar(aa, bb, cc, 0);
-				red_max = cvScalar(dd, hh, ii, 0);
+				green_min = cvScalar(aa, bb, cc, 0);
+				green_max = cvScalar(dd, hh, ii, 0);
 			}
 		});
 		sl21.addChangeListener(new ChangeListener() {
 			@Override public void stateChanged(ChangeEvent arg0) {
 				l21.setText("S min: " + sl21.getValue());
 				bb = sl21.getValue();
-				red_min = cvScalar(aa, bb, cc, 0);
-				red_max = cvScalar(dd, hh, ii, 0);
+				green_min = cvScalar(aa, bb, cc, 0);
+				green_max = cvScalar(dd, hh, ii, 0);
 			}
 		});
 		sl31.addChangeListener(new ChangeListener() {
 			@Override public void stateChanged(ChangeEvent arg0) {
 				l31.setText("V min: " + sl31.getValue());
 				cc = sl31.getValue();
-				red_min = cvScalar(aa, bb, cc, 0);
-				red_max = cvScalar(dd, hh, ii, 0);
+				green_min = cvScalar(aa, bb, cc, 0);
+				green_max = cvScalar(dd, hh, ii, 0);
 			}
 		});
 		sl12.addChangeListener(new ChangeListener() {
 			@Override public void stateChanged(ChangeEvent arg0) {
 				l12.setText("H max: " + sl12.getValue());
 				dd = sl12.getValue();
-				red_min = cvScalar(aa, bb, cc, 0);
-				red_max = cvScalar(dd, hh, ii, 0);
+				green_min = cvScalar(aa, bb, cc, 0);
+				green_max = cvScalar(dd, hh, ii, 0);
 			}
 		});
 		sl22.addChangeListener(new ChangeListener() {
 			@Override public void stateChanged(ChangeEvent arg0) {
 				l22.setText("S max: " + sl22.getValue());
 				hh = sl22.getValue();
-				red_min = cvScalar(aa, bb, cc, 0);
-				red_max = cvScalar(dd, hh, ii, 0);
+				green_min = cvScalar(aa, bb, cc, 0);
+				green_max = cvScalar(dd, hh, ii, 0);
 			}
 		});
 		sl32.addChangeListener(new ChangeListener() {
 			@Override public void stateChanged(ChangeEvent arg0) {
 				l32.setText("V max: " + sl32.getValue());
 				ii = sl32.getValue();
-				red_min = cvScalar(aa, bb, cc, 0);
-				red_max = cvScalar(dd, hh, ii, 0);
+				green_min = cvScalar(aa, bb, cc, 0);
+				green_max = cvScalar(dd, hh, ii, 0);
 			}
 		});
 	}
