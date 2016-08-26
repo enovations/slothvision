@@ -66,8 +66,31 @@ public class OSDRender {
 
 		if (buttons == null || buttons.get(2) == 0) {
 
-			g.setColor(new Color(0, 0, 0, 28));
+			g.setColor(new Color(0, 51, 55, 58));
 			g.fillRect(230, imageH - 330, 180, 140);
+
+			g.setColor(new Color(255, 255, 255, 97));
+
+			g.drawLine(250,imageH - 330+69,230+160,imageH - 330+69);
+			g.drawLine(250,imageH - 330+70,230+160,imageH - 330+70);
+			g.drawLine(250,imageH - 330+71,230+160,imageH - 330+71);
+
+			g.drawLine(230+89, imageH - 330+15, 230+89, imageH - 330+120);
+			g.drawLine(230+90, imageH - 330+15, 230+90, imageH - 330+120);
+			g.drawLine(230+91, imageH - 330+15, 230+91, imageH - 330+120);
+
+			int yx = (int) (Launcher.joystick.left_lr*-115);
+			int yy = (int) (Launcher.joystick.left_ud*-45);
+
+			g.drawRect(230+90-8+yx,imageH - 330+70-8+yy,16,16);
+			g.drawRect(230+90-9+yx,imageH - 330+70-9+yy,18,18);
+			g.drawRect(230+90-7+yx,imageH - 330+70-7+yy,14,14);
+
+			g.drawLine(230+90,imageH - 330+70,230+90-yx,imageH - 330+70-yy);
+
+			g.drawLine(230+90+1,imageH - 330+70+1,230+90+yx+1,imageH - 330+70+yy+1);
+			g.drawLine(230+90,imageH - 330+70,230+90+yx,imageH - 330+70+yy);
+			g.drawLine(230+90-1,imageH - 330+70-1,230+90+yx-1,imageH - 330+70+yy-1);
 
 		}
 
@@ -77,6 +100,13 @@ public class OSDRender {
 			int offsety = 0;
 
 			g.clipRect(imageW - 390, imageH - 330, 180, 140);
+
+			g.setColor(new Color(0, 51, 55, 58));
+			g.fillRect(imageW - 390, imageH - 330, 180, 140);
+
+			g.setColor(new Color(255, 255, 255, 97));
+			g.drawRect(imageW - 390-1, imageH - 330-1, 180+1, 140+1);
+
 			g.rotate(data.yaw, (900 - 390 + 90), (720 - 330 + 70));
 			g.drawImage(repos(map.getImage(), offsetx + (int) (data.x * 20), offsety + (int) (data.y * 20)), imageW - 550,
 					imageH - 500, null);
