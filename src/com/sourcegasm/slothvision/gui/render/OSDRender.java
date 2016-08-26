@@ -34,7 +34,7 @@ public class OSDRender {
 
 		final Graphics2D g = (Graphics2D) osd.getGraphics();
 
-		if (Launcher.piROSConnector.data.mode == 2) {
+		if (Launcher.piROSConnector.data.mode == 2 || Launcher.piROSConnector.data.mode == 3) {
 
 			g.setColor(new Color(255, 0, 21, 99));
 			g.fillOval(Launcher.piROSConnector.data.markerLoc.x, Launcher.piROSConnector.data.markerLoc.y, 50,50);
@@ -91,6 +91,8 @@ public class OSDRender {
 			g.drawLine(230+90+1,imageH - 330+70+1,230+90+yx+1,imageH - 330+70+yy+1);
 			g.drawLine(230+90,imageH - 330+70,230+90+yx,imageH - 330+70+yy);
 			g.drawLine(230+90-1,imageH - 330+70-1,230+90+yx-1,imageH - 330+70+yy-1);
+
+			g.setFont(g.getFont().deriveFont(18.0f));
 
 		}
 
