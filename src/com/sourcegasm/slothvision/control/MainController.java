@@ -20,7 +20,7 @@ public class MainController implements Runnable {
 	private PID speed = new PID(0.95f, 0.0001f, 0, 0.1f, PID.Direction.REVERSED);
 
     private PID panPid = new PID(90f, 0, 0, 0, PID.Direction.REVERSED);
-    private PID tiltPid = new PID(0.0016f, 0, 0, 0, PID.Direction.NORMAL);
+    private PID tiltPid = new PID(90f, 0, 0, 0, PID.Direction.REVERSED);
 
 	private ModeSwitcher switcher = new ModeSwitcher();
 
@@ -112,7 +112,7 @@ public class MainController implements Runnable {
 
 
 				    control.pan = panPid.calculate(Launcher.piROSConnector.data.marker_x, 450);
-					System.out.println(control.pan);
+                    control.tilt = tiltPid.calculate(Launcher.piROSConnector.data.marker_y, 360);
 
 					control.speed = control.steer = 0;
 
