@@ -53,7 +53,7 @@ def talker():
     sock.bind((UDP_IP, UDP_PORT))
 
     robot_pub = rospy.Publisher('/robot/cmd_vel', Twist, queue_size=0)
-    gimbalo_pub = rospy.Publisher('/pantilt/cmd_vel', Twist, queue_size=0)
+    gimbalo_pub = rospy.Publisher('/pan_tilt/cmd_vel', Twist, queue_size=0)
 
     rospy.Subscriber('/robot/power_supply', PowerSupply, battery)
     rospy.Subscriber('/robot/sonar', PointCloud, sonar)
