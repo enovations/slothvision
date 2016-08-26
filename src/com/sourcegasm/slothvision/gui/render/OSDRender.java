@@ -92,8 +92,6 @@ public class OSDRender {
 			g.drawLine(230+90,imageH - 330+70,230+90+yx,imageH - 330+70+yy);
 			g.drawLine(230+90-1,imageH - 330+70-1,230+90+yx-1,imageH - 330+70+yy-1);
 
-			g.setFont(g.getFont().deriveFont(18.0f));
-
 		}
 
 		if (buttons == null || buttons.get(4) == 0) {
