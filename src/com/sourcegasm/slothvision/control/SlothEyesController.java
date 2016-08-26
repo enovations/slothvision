@@ -49,7 +49,6 @@ public class SlothEyesController {
 		Launcher.piROSConnector.data.marker_distance = (int) distance;
 		Launcher.piROSConnector.data.marker_x = (int) (((double) data1.x + (double) data2.x) / 2.0);
 		Launcher.piROSConnector.data.marker_y = (int) (((double) data1.y + (double) data2.y) / 2.0);
-		return;
 	}
 
 }
