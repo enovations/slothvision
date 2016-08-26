@@ -30,13 +30,13 @@ public class SlothEyesController {
 		}).start();
 	}
 
-	public double calculateDistance() {
+	public void calculateDistance() {
 		BufferedImage image1 = guiAssembly.src1.getCurrentFrame();
 		BufferedImage image2 = guiAssembly.src2.getCurrentFrame();
 
 		if (image1 == null || image2 == null) {
 			//System.out.println("No image received!");
-			return 0;
+			return;
 		}
 
 		LocationData data1 = slothEyes1.getMarkerData(image1, false);
@@ -48,8 +48,7 @@ public class SlothEyesController {
 
 		Launcher.piROSConnector.data.marker_distance = (int) distance;
 		Launcher.piROSConnector.data.marker_x = (int) (((double) data1.x + (double) data2.x) / 2.0);
-
-		return 0;
+		return;
 	}
 
 }
