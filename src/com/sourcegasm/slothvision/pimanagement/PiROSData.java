@@ -1,7 +1,8 @@
 package com.sourcegasm.slothvision.pimanagement;
 
-import java.util.concurrent.CopyOnWriteArrayList;
 import com.sourcegasm.slothvision.opensv.LocationData;
+
+import java.util.concurrent.CopyOnWriteArrayList;
 
 
 public class PiROSData {
@@ -12,6 +13,7 @@ public class PiROSData {
 	public int mode = 0;
 	public int marker_distance;
 	public int marker_x;
+	public int marker_y;
 	public LocationData markerLoc;
 
 	public static class Point {
