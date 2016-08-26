@@ -181,7 +181,7 @@ public class SlothEyes {
 		});
 	}*/
 
-	private static IplImage convertBuffToIplImage(BufferedImage original) {
+	public static IplImage convertBuffToIplImage(BufferedImage original) {
 		//convert to bgr
 		BufferedImage img = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 		Graphics g = img.getGraphics();

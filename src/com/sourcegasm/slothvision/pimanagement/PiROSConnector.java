@@ -69,7 +69,8 @@ public class PiROSConnector implements Runnable {
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("Connection error! -42");
+			System.out.println("Connection error! " +
+					"-42");
 		}
 
 	}
