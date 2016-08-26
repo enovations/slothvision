@@ -7,8 +7,6 @@ import org.bytedeco.javacv.Java2DFrameConverter;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -22,8 +20,8 @@ public class SlothEyes {
 	private CvScalar color1 = cvScalar(152, 154, 187, 0);
 	private CvScalar color1_max = cvScalar(180, 230, 255, 0);
 
-	private CvScalar color2_min = cvScalar(28, 141, 148, 0);
-	private CvScalar color2_max = cvScalar(72, 255, 255, 0);
+	//private CvScalar color2_min = cvScalar(28, 141, 148, 0);
+	//private CvScalar color2_max = cvScalar(72, 255, 255, 0);
 
 	private JSlider sl11 = new JSlider(0, 180, 0);
 	private JSlider sl21 = new JSlider(0, 255, 0);
@@ -49,7 +47,7 @@ public class SlothEyes {
 			cvCvtColor(sourceRGB, source, CV_BGR2HSV);
 
 			IplImage thrs1 = hsvThreshold(source, color1, color1_max);
-			IplImage thrs2 = hsvThreshold(source, color2_min, color2_max);
+			//IplImage thrs2 = hsvThreshold(source, color2_min, color2_max);
 
 			/*if(showImage) {
 				OpenCVFrameConverter converter = new OpenCVFrameConverter.ToIplImage();
@@ -57,10 +55,11 @@ public class SlothEyes {
 			}*/
 
 			cvErode(thrs1, thrs1, null, 8);
-			cvErode(thrs2, thrs2, null, 8);
+			//cvErode(thrs2, thrs2, null, 8);
 
 			Mat result = new Mat();
-			bitwise_or(new Mat(thrs2), new Mat(thrs1), result);
+			//bitwise_or(new Mat(thrs2), new Mat(thrs1), result);
+			bitwise_or(new Mat(thrs1), new Mat(thrs1), result);
 
 			//            OpenCVFrameConverter converter = new OpenCVFrameConverter.ToIplImage();
 			//            canvas.showImage(converter.convert(thrs2));
@@ -103,7 +102,7 @@ public class SlothEyes {
 		return imgThreshold;
 	}
 
-	public void load() {
+	/*public void load() {
 
 		canvas.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 
@@ -180,9 +179,9 @@ public class SlothEyes {
 				color2_max = cvScalar(dd, hh, ii, 0);
 			}
 		});
-	}
+	}*/
 
-	private static IplImage convertBuffToIplImage(BufferedImage original) {
+	public static IplImage convertBuffToIplImage(BufferedImage original) {
 		//convert to bgr
 		BufferedImage img = new BufferedImage(original.getWidth(), original.getHeight(), BufferedImage.TYPE_3BYTE_BGR);
 		Graphics g = img.getGraphics();
