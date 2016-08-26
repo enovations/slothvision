@@ -32,7 +32,7 @@ vec4 Distort(vec4 p, float BarrelPower) {
  
 void main() {
   vec4 P = vec4(coordinates, 1);
-  P.x += 0.47;
+  P.x += 0.43;
   
   vec4 newPos = Distort(P, 0.9);
   newPos.x -= 0.42;

@@ -20,7 +20,7 @@ public class OpenGLWindow {
 
 	private long window;
 
-	private final int width = 1280, height = 800;
+	private final int width = 1920, height = 1080;
 
 	public GLFWKeyCallback keyCallback = null;
 
