@@ -4,3 +4,5 @@
 out/
 *~
 Test.java
+hs_err_pid*
+
