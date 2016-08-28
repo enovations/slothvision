@@ -8,6 +8,7 @@ import com.sourcegasm.slothvision.gui.render.SBSBufferedImage;
 import com.sourcegasm.slothvision.opengl.OpenGLWindow;
 
 import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
 
 public class GUIAssembly {
 

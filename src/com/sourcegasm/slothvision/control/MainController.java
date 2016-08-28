@@ -96,7 +96,6 @@ public class MainController implements Runnable {
 					if (!(val < 0.5 || val > 1.4)) {
 						speedVal = speed.calculate((float) val, 0.9f);
 					}
-					System.out.println(speedVal);
 					control.speed = Limiter.limitValues(speedVal, 0.8);
 				} else {
 					if (Launcher.joystick.button_drive == 1) {
@@ -113,6 +112,8 @@ public class MainController implements Runnable {
 
 				    control.pan = panPid.calculate(Launcher.piROSConnector.data.marker_x, 450);
                     control.tilt = tiltPid.calculate(Launcher.piROSConnector.data.marker_y, 360);
+
+					System.out.println(control.pan);
 
 					control.speed = control.steer = 0;
 

@@ -114,7 +114,7 @@ public class OSDRender {
 			g.rotate(0, (900 - 390 + 75), (720 - 330 + 50));
 
 			if (Launcher.hmdSensors.getEulerAngles() != null)
-				g.rotate(Math.toRadians(Launcher.hmdSensors.getEulerAngles().yaw), (imageW - 391 + 90), (imageH - 334 + 70));
+				g.rotate(Math.toRadians(Launcher.hmdSensors.getEulerAngles().yaw)*-1, (imageW - 391 + 90), (imageH - 334 + 70));
 			g.drawImage(fov.getImage(), imageW - 391, imageH - 334, null);
 
 		}
