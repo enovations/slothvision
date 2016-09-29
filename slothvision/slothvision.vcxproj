@@ -85,13 +85,13 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>
+      </WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>
       </SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir)..\OculusSDK\LibOVR\Include;$(ProjectDir)..\OculusSDK\LibOVRKernel\Src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>OldStyle</DebugInformationFormat>
-      <TreatWarningAsError>true</TreatWarningAsError>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OmitFramePointers>false</OmitFramePointers>
       <PreprocessorDefinitions>OVR_BUILD_DEBUG;WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -100,7 +100,7 @@
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(ProjectDir)..\OculusSDK\LibOVR\Lib\Windows\$(Platform)\$(Configuration)\VS2015\LibOVR.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(ProjectDir)..\OculusSDK\LibOVR\Lib\Windows\$(Platform)\$(Configuration)\VS2015\LibOVR.lib;setupapi.lib;Ws2_32.lib;iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Windows</SubSystem>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
     </Link>
@@ -139,10 +139,12 @@
   <ItemGroup>
     <ClCompile Include="CAPI_GLE.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="udp.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CAPI_GLE.h" />
     <ClInclude Include="CAPI_GLE_GL.h" />
+    <ClInclude Include="udp.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

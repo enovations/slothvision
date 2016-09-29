@@ -28,11 +28,15 @@ limitations under the License.
 // Include the Oculus SDK
 #include "OVR_CAPI_GL.h"
 
+#include "udp.h"
+
 #if defined(_WIN32)
 #include <dxgi.h> // for GetDefaultAdapterLuid
 #pragma comment(lib, "dxgi.lib")
 #endif
 
+#include <cstring>
+#include <atlstr.h>
 
 using namespace OVR;
 
@@ -146,6 +150,53 @@ static bool MainLoop(bool retryCreate)
 
 	// FloorLevel will give tracking poses where the floor height is 0
 	ovr_SetTrackingOriginType(session, ovrTrackingOrigin_FloorLevel);
+
+	//////////////////
+
+	char udp_buffer[512] = { 0 };
+
+	int nogavica = connect(25564);
+	uint32_t add = 0;
+	uint8_t *tmp = (uint8_t*)&add;
+	tmp[0] = 127;
+	tmp[1] = 0;
+	tmp[2] = 0;
+	tmp[3] = 1;
+	sendData(add, nogavica, "neki", 4, 25565);
+
+	while (1)
+	{
+		int newData = receive(nogavica, udp_buffer, 512);
+
+		if (newData)
+		{
+			CString tmp(udp_buffer);
+		
+			if (tmp == "Exit")
+			{
+				exit(0);
+			}
+			/*
+			// Data received here...
+			if (strcmp(udp_buffer, "Exit") == 0)
+			{
+				exit(0);
+			}
+			*/
+			// Clear the buffer
+			memset(udp_buffer, 0, sizeof(udp_buffer));
+		}
+
+
+
+
+
+
+	}
+	disconnect(nogavica);
+	TerminateWinsock();
+
+	///////////////////
 
 	// Main loop
 	while (Platform.HandleMessages())

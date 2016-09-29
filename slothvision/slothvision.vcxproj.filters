@@ -21,12 +21,18 @@
     <ClCompile Include="CAPI_GLE.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="udp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CAPI_GLE.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CAPI_GLE_GL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="udp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
