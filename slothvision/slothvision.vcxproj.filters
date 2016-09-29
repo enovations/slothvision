@@ -13,30 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\thirdparty">
+      <UniqueIdentifier>{c938248e-274d-406a-a912-d724c7ca6804}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\thirdparty">
+      <UniqueIdentifier>{b75ec7d6-9d47-460d-beb9-3e6e2a3fd9bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\network">
+      <UniqueIdentifier>{d753e43c-028f-476b-a7a1-0af296ab3d45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\network">
+      <UniqueIdentifier>{ef3c683d-76a3-4434-81e0-0080cb6f1e41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\render">
+      <UniqueIdentifier>{8acb4068-5fab-4f2d-a904-b3bf9d185423}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render">
+      <UniqueIdentifier>{6c6424c8-bf89-40d7-8532-3396bc2c9ca5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="thirdparty\CAPI_GLE.cpp">
+      <Filter>Source Files\thirdparty</Filter>
     </ClCompile>
-    <ClCompile Include="CAPI_GLE.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="network\udp.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="udp.cpp">
+    <ClCompile Include="render\render.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="riftvision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CAPI_GLE.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="thirdparty\Win32_DirectXAppUtil.h">
+      <Filter>Header Files\thirdparty</Filter>
     </ClInclude>
-    <ClInclude Include="CAPI_GLE_GL.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="thirdparty\CAPI_GLE.h">
+      <Filter>Header Files\thirdparty</Filter>
     </ClInclude>
-    <ClInclude Include="udp.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="thirdparty\CAPI_GLE_GL.h">
+      <Filter>Header Files\thirdparty</Filter>
     </ClInclude>
-    <ClInclude Include="Win32_DirectXAppUtil.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="network\udp.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="render\render.h">
+      <Filter>Header Files\render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -24,7 +24,9 @@ limitations under the License.
 /// It runs with DirectX11.
 
 // Include DirectX
-#include "Win32_DirectXAppUtil.h"
+#include "../thirdparty/Win32_DirectXAppUtil.h"
+
+#include "render.h"
 
 // Include the Oculus SDK
 #include "OVR_CAPI_D3D.h"
@@ -66,7 +68,7 @@ struct Prostor
 
 	void Init(int mode)
 	{
-		TriangleSet cube;
+		/*TriangleSet cube;
 		cube.AddSolidColorBox(0.5f, -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0xff00ff00);
 		Add(
 			new Model(&cube, XMFLOAT3(0, 0, 0), XMFLOAT4(0, 0, 0, 1),
@@ -74,7 +76,7 @@ struct Prostor
 					new Texture(false, 256, 256, Texture::AUTO_CEILING)
 				)
 			)
-		);
+		);*/
 
 		//D3D11_TEXTURE2D_DESC desc;
 		//desc.Width = 256;
@@ -407,12 +409,12 @@ static bool MainLoop(bool retryCreate)
 				XMFLOAT4 CombinedRotF;
 				XMStoreFloat4(&CombinedRotF, CombinedRot);
 				if (eye == 0) {
-					roomScene->Models[1]->Pos = CombinedPosF;
-					roomScene->Models[1]->Rot = CombinedRotF;
+					roomScene->Models[0]->Pos = CombinedPosF;
+					roomScene->Models[0]->Rot = CombinedRotF;
 				}
 				else {
-					roomScene2->Models[1]->Pos = CombinedPosF;
-					roomScene2->Models[1]->Rot = CombinedRotF;
+					roomScene2->Models[0]->Pos = CombinedPosF;
+					roomScene2->Models[0]->Rot = CombinedRotF;
 				}
 
 
@@ -450,8 +452,8 @@ static bool MainLoop(bool retryCreate)
 				roomScene->Models[1]->Fill->Tex->FillTexture(texDataL);
 				*/
 
-				roomScene2->Models[1]->Fill->Tex->FillTexture(texDataL);
-				roomScene->Models[1]->Fill->Tex->FillTexture(texDataR);
+				roomScene2->Models[0]->Fill->Tex->FillTexture(texDataL);
+				roomScene->Models[0]->Fill->Tex->FillTexture(texDataR);
 
 				if (eye == 0)
 					roomScene->Render(&prod, 1, 1, 1, 1, true);
@@ -518,10 +520,7 @@ Done:
 	return retryCreate || (result == ovrError_DisplayLost);
 }
 
-//-------------------------------------------------------------------------------------
-int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
-{
-	// Initializes LibOVR, and the Rift
+void Render::start(HINSTANCE hinst) {
 	ovrResult result = ovr_Initialize(nullptr);
 	VALIDATE(OVR_SUCCESS(result), "Failed to initialize libOVR.");
 
@@ -530,7 +529,6 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	DIRECTX.Run(MainLoop);
 
 	ovr_Shutdown();
-	return(0);
 }
 
 ////////////////////
