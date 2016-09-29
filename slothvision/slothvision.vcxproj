@@ -139,13 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="network\udp.cpp" />
+    <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="network\UDPSocket.cpp" />
     <ClCompile Include="render\render.cpp" />
     <ClCompile Include="slothvision.cpp" />
     <ClCompile Include="thirdparty\CAPI_GLE.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="network\udp.h" />
+    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="network\UDPSocket.h" />
     <ClInclude Include="render\render.h" />
     <ClInclude Include="thirdparty\CAPI_GLE.h" />
     <ClInclude Include="thirdparty\CAPI_GLE_GL.h" />
