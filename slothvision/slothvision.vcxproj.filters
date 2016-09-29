@@ -42,7 +42,7 @@
     <ClCompile Include="render\render.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
-    <ClCompile Include="riftvision.cpp">
+    <ClCompile Include="slothvision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

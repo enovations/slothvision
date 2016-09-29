@@ -141,7 +141,7 @@
   <ItemGroup>
     <ClCompile Include="network\udp.cpp" />
     <ClCompile Include="render\render.cpp" />
-    <ClCompile Include="riftvision.cpp" />
+    <ClCompile Include="slothvision.cpp" />
     <ClCompile Include="thirdparty\CAPI_GLE.cpp" />
   </ItemGroup>
   <ItemGroup>
