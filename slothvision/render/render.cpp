@@ -1,32 +1,5 @@
-/************************************************************************************
-Filename    :   Win32_RoomTiny_Main.cpp
-Content     :   First-person view test application for Oculus Rift
-Created     :   11th May 2015
-Authors     :   Tom Heath
-Copyright   :   Copyright 2015 Oculus, Inc. All Rights reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*************************************************************************************/
-/// This is an entry-level sample, showing a minimal VR sample, 
-/// in a simple environment.  Use WASD keys to move around, and cursor keys.
-/// Dismiss the health and safety warning by tapping the headset, 
-/// or pressing any key. 
-/// It runs with DirectX11.
-
 // Include DirectX
 #include "../thirdparty/Win32_DirectXAppUtil.h"
-
-#include "render.h"
 
 // Include the Oculus SDK
 #include "OVR_CAPI_D3D.h"
@@ -42,7 +15,9 @@ limitations under the License.
 #include <opencv2/core/directx.hpp>
 #include <opencv2/core/ocl.hpp>
 
-struct Prostor
+#include "render.h"
+
+struct SingleEyeScene
 {
 	static const int MAX_MODELS = 100;
 	Model *Models[MAX_MODELS];
@@ -68,37 +43,12 @@ struct Prostor
 
 	void Init(int mode)
 	{
-		/*TriangleSet cube;
-		cube.AddSolidColorBox(0.5f, -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0xff00ff00);
-		Add(
-			new Model(&cube, XMFLOAT3(0, 0, 0), XMFLOAT4(0, 0, 0, 1),
-				new Material(
-					new Texture(false, 256, 256, Texture::AUTO_CEILING)
-				)
-			)
-		);*/
-
-		//D3D11_TEXTURE2D_DESC desc;
-		//desc.Width = 256;
-		//desc.Height = 256;
-		//desc.MipLevels = desc.ArraySize = 1;
-		//desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		//desc.SampleDesc.Count = 1;
-		//desc.Usage = D3D11_USAGE_DYNAMIC;
-		//desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-		//desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		//desc.MiscFlags = 0;
-
-		//ID3D11Device *pd3dDevice = DIRECTX.Device; // Don't forget to initialize this
-		//ID3D11Texture2D *pTexture = NULL;
-		//pd3dDevice->CreateTexture2D(&desc, NULL, &pTexture);
 
 		TriangleSet screen;
 		float w = 40.0f;
 		float h = 30.0f;
 		float d = 60.0f;
 		float b = 0.1f;
-		//screen.AddSolidColorBox(-w/2, -h/2, -d, w/2, h/2, -d-b, mode==1 ? 0xffff0000 : 0xff0000ff);
 		float z1 = -30;
 		float z2 = z1;
 		float x1 = -10;
@@ -120,20 +70,10 @@ struct Prostor
 				)
 			)
 		);
-
-		/*uint32_t * texData = new uint32_t[size * size];
-
-		if (mode)
-		{
-
-		for (int i = 0; i < size * size; i++) texData[i] = 0xFF000000 | (i % 256);
-		Models[1]->Fill->Tex->FillTexture(texData);
-		}
-		delete[] texData;*/
 	}
 
-	Prostor() : numModels(0) {}
-	Prostor(int mode) :
+	SingleEyeScene() : numModels(0) {}
+	SingleEyeScene(int mode) :
 		numModels(0)
 	{
 		Init(mode);
@@ -143,15 +83,12 @@ struct Prostor
 		while (numModels-- > 0)
 			delete Models[numModels];
 	}
-	~Prostor()
+	~SingleEyeScene()
 	{
 		Release();
 	}
 };
 
-//------------------------------------------------------------
-// ovrSwapTextureSet wrapper class that also maintains the render target views
-// needed for D3D11 rendering.
 struct OculusTexture
 {
 	ovrSession               Session;
@@ -195,8 +132,6 @@ struct OculusTexture
 			rtvd.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 			ID3D11RenderTargetView* rtv;
 			DIRECTX.Device->CreateRenderTargetView(tex, &rtvd, &rtv);
-			//			cv::Mat slika;
-			//			cv::directx::convertFromD3D11Texture2D(tex, slika);
 			TexRtv.push_back(rtv);
 			tex->Release();
 		}
@@ -223,7 +158,6 @@ struct OculusTexture
 		return TexRtv[index];
 	}
 
-	// Commit changes
 	void Commit()
 	{
 		ovr_CommitTextureSwapChain(Session, TextureChain);
@@ -237,8 +171,8 @@ static bool MainLoop(bool retryCreate)
 	ovrMirrorTexture mirrorTexture = nullptr;
 	OculusTexture  * pEyeRenderTexture[2] = { nullptr, nullptr };
 	DepthBuffer    * pEyeDepthBuffer[2] = { nullptr, nullptr };
-	Prostor          * roomScene = nullptr;
-	Prostor          * roomScene2 = nullptr;
+	SingleEyeScene          * roomScene = nullptr;
+	SingleEyeScene          * roomScene2 = nullptr;
 	Camera         * mainCam = nullptr;
 	ovrMirrorTextureDesc mirrorDesc = {};
 	long long frameIndex = 0;
@@ -254,8 +188,6 @@ static bool MainLoop(bool retryCreate)
 	if (!OVR_SUCCESS(result))
 		return retryCreate;
 
-
-
 	cv::VideoCapture cap("udpsrc port=6000 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! videoconvert ! appsink");
 	if (!cap.isOpened()) {
 		FATALERROR("Failed to open video stream.");
@@ -267,14 +199,9 @@ static bool MainLoop(bool retryCreate)
 
 	ovrHmdDesc hmdDesc = ovr_GetHmdDesc(session);
 
-	// Setup Device and Graphics
-	// Note: the mirror window can be any size, for this sample we use 1/2 the HMD resolution. Changed ...
 	if (!DIRECTX.InitDevice(hmdDesc.Resolution.w, hmdDesc.Resolution.h, reinterpret_cast<LUID*>(&luid)))
 		goto Done;
 
-	//cv::directx::ocl::initializeContextFromD3D11Device(DIRECTX.Device);
-
-	// Make the eye render buffers (caution if actual size < requested due to HW limits). 
 	ovrRecti         eyeRenderViewport[2];
 
 	for (int eye = 0; eye < 2; ++eye)
@@ -308,10 +235,8 @@ static bool MainLoop(bool retryCreate)
 		FATALERROR("Failed to create mirror texture.");
 	}
 
-	// Create the room model
-	//roomScene = new Scene(false);
-	roomScene = new Prostor(0);
-	roomScene2 = new Prostor(1);
+	roomScene = new SingleEyeScene(0);
+	roomScene2 = new SingleEyeScene(1);
 
 	// Create camera
 	mainCam = new Camera(XMVectorSet(0.0f, 0.0f, 5.0f, 0), XMQuaternionIdentity());
@@ -346,12 +271,6 @@ static bool MainLoop(bool retryCreate)
 
 		if (sessionStatus.IsVisible)
 		{
-
-			// Animate the cube
-			static float cubeClock = 0;
-			roomScene->Models[0]->Pos = XMFLOAT3(9 * sin(cubeClock), 3, 9 * cos(cubeClock));
-			roomScene2->Models[0]->Pos = XMFLOAT3(9 * sin(cubeClock), 3, 9 * cos(cubeClock));
-			cubeClock += 0.015f;
 
 			// Call ovr_GetRenderDesc each frame to get the ovrEyeRenderDesc, as the returned values (e.g. HmdToEyeOffset) may change at runtime.
 			ovrEyeRenderDesc eyeRenderDesc[2];
@@ -408,16 +327,12 @@ static bool MainLoop(bool retryCreate)
 					roomScene2->Models[0]->Rot = CombinedRotF;
 				}
 
-
-				//cv::Mat img;
-				//cv::cvtColor(image, img, cv::COLOR_BGR2RGBA, 4);
 				uint8_t * ptr1, *ptr2;
 
 				ptr1 = (uint8_t*)texDataL;
 				ptr2 = image.data;
 				for (int i = 0; i < size * size; i++)
 				{
-					//memcpy(ptr1, ptr2, 3);
 					*(uint32_t*)ptr1 = *(uint32_t*)ptr2;
 					ptr1[3] = 0xFF;
 					ptr1 += 4;
@@ -428,20 +343,11 @@ static bool MainLoop(bool retryCreate)
 				ptr2 = imageR.data;
 				for (int i = 0; i < size * size; i++)
 				{
-					//memcpy(ptr1, ptr2, 3);
 					*(uint32_t*)ptr1 = *(uint32_t*)ptr2;
 					ptr1[3] = 0xFF;
 					ptr1 += 4;
 					ptr2 += 3;
 				}
-
-				//for (int i = 0; i < size * size; i++) texDataR[i] = 0xFF000000 | (rand()*20 % 256);
-				//for (int i = 0; i < size * size; i++) texDataL[i] = 0xFF000000 | (i % 256) | (i & 0xFF00);
-				/*if (image.isContinuous()) {
-				roomScene2->Models[1]->Fill->Tex->FillTexture((uint32_t*)image.data);
-				}
-				roomScene->Models[1]->Fill->Tex->FillTexture(texDataL);
-				*/
 
 				roomScene2->Models[0]->Fill->Tex->FillTexture(texDataL);
 				roomScene->Models[0]->Fill->Tex->FillTexture(texDataR);
@@ -451,11 +357,9 @@ static bool MainLoop(bool retryCreate)
 				else
 					roomScene2->Render(&prod, 1, 1, 1, 1, true);
 
-				// Commit rendering to the swap chain
 				pEyeRenderTexture[eye]->Commit();
 			}
 
-			// Initialize our single full screen Fov layer.
 			ovrLayerEyeFov ld = {};
 			ld.Header.Type = ovrLayerType_EyeFov;
 			ld.Header.Flags = 0;
@@ -471,26 +375,20 @@ static bool MainLoop(bool retryCreate)
 
 			ovrLayerHeader* layers = &ld.Header;
 			result = ovr_SubmitFrame(session, frameIndex, nullptr, &layers, 1);
-			// exit the rendering loop if submit returns an error, will retry on ovrError_DisplayLost
 			if (!OVR_SUCCESS(result))
 				goto Done;
 
 			frameIndex++;
 		}
 
-		// Render mirror
 		ID3D11Texture2D* tex = nullptr;
 		ovr_GetMirrorTextureBufferDX(session, mirrorTexture, IID_PPV_ARGS(&tex));
 		DIRECTX.Context->CopyResource(DIRECTX.BackBuffer, tex);
-		//cv::directx::convertToD3D11Texture2D(frame, tex);
 		tex->Release();
-		//		cv::Mat slika;
-		//		cv::directx::convertFromD3D11Texture2D(tex, slika);
 		DIRECTX.SwapChain->Present(0, 0);
 
 	}
 
-	// Release resources
 Done:
 	delete mainCam;
 	delete roomScene;
@@ -507,7 +405,6 @@ Done:
 	delete[] texDataL;
 	delete[] texDataR;
 
-	// Retry on ovrError_DisplayLost
 	return retryCreate || (result == ovrError_DisplayLost);
 }
 
@@ -521,50 +418,3 @@ void Render::start(HINSTANCE hinst) {
 
 	ovr_Shutdown();
 }
-
-////////////////////
-//
-//char udp_buffer[512] = { 0 };
-//
-//int nogavica = connect(25564);
-//uint32_t add = 0;
-//uint8_t *tmp = (uint8_t*)&add;
-//tmp[0] = 127;
-//tmp[1] = 0;
-//tmp[2] = 0;
-//tmp[3] = 1;
-//sendData(add, nogavica, "neki", 4, 25565);
-//
-//while (1)
-//{
-//	int newData = receive(nogavica, udp_buffer, 512);
-//
-//	if (newData)
-//	{
-//		CString tmp(udp_buffer);
-//
-//		if (tmp == "Exit")
-//		{
-//			exit(0);
-//		}
-//		/*
-//		// Data received here...
-//		if (strcmp(udp_buffer, "Exit") == 0)
-//		{
-//		exit(0);
-//		}
-//		*/
-//		// Clear the buffer
-//		memset(udp_buffer, 0, sizeof(udp_buffer));
-//	}
-//
-//
-//
-//
-//
-//
-//}
-//disconnect(nogavica);
-//TerminateWinsock();
-//
-/////////////////////

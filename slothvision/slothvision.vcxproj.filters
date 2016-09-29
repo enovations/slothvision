@@ -36,14 +36,17 @@
     <ClCompile Include="thirdparty\CAPI_GLE.cpp">
       <Filter>Source Files\thirdparty</Filter>
     </ClCompile>
-    <ClCompile Include="network\udp.cpp">
-      <Filter>Source Files\network</Filter>
-    </ClCompile>
     <ClCompile Include="render\render.cpp">
       <Filter>Source Files\render</Filter>
     </ClCompile>
     <ClCompile Include="slothvision.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="network\UDPSocket.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkManager.cpp">
+      <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -56,11 +59,14 @@
     <ClInclude Include="thirdparty\CAPI_GLE_GL.h">
       <Filter>Header Files\thirdparty</Filter>
     </ClInclude>
-    <ClInclude Include="network\udp.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="render\render.h">
       <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="network\UDPSocket.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkManager.h">
+      <Filter>Header Files\network</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
