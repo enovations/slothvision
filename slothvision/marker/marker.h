@@ -16,6 +16,7 @@
 namespace marker {
     void generateMarker(const std::string& path);
     bool markerPosition(const cv::Mat& image, cv::Point2f& center);
+    double markerDistance(const cv::Point2f&, const cv::Point2f&);
 }
 
 #endif //SLOTHVISION_MARKER_H

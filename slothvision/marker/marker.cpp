@@ -32,3 +32,10 @@ bool marker::markerPosition(const cv::Mat& image, cv::Point2f& center) {
 
     return false;
 }
+
+double marker::markerDistance(const cv::Point2f& left, const cv::Point2f& right) {
+    double distance = left.x - right.x;
+    distance = fabs(distance) * 1.;
+
+    return distance;
+}
