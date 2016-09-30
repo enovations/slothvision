@@ -139,17 +139,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="NetworkManager.cpp" />
+    <ClCompile Include="control\control.cpp" />
+    <ClCompile Include="marker\marker.cpp" />
+    <ClCompile Include="marker\marker_test.cpp" />
+    <ClCompile Include="network\CameraStream.cpp" />
+    <ClCompile Include="network\NetworkManager.cpp" />
     <ClCompile Include="network\UDPSocket.cpp" />
+    <ClCompile Include="parser\RosDataParser.cpp" />
+    <ClCompile Include="pid\pid.cpp" />
     <ClCompile Include="render\render.cpp" />
     <ClCompile Include="slothvision.cpp" />
-    <ClCompile Include="CameraStream.cpp" />
     <ClCompile Include="thirdparty\CAPI_GLE.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CameraStream.h" />
-    <ClInclude Include="NetworkManager.h" />
+    <ClInclude Include="control\control.h" />
+    <ClInclude Include="marker\marker.h" />
+    <ClInclude Include="network\CameraStream.h" />
+    <ClInclude Include="network\NetworkManager.h" />
     <ClInclude Include="network\UDPSocket.h" />
+    <ClInclude Include="parser\RosDataParser.h" />
+    <ClInclude Include="pid\pid.h" />
     <ClInclude Include="render\render.h" />
     <ClInclude Include="thirdparty\CAPI_GLE.h" />
     <ClInclude Include="thirdparty\CAPI_GLE_GL.h" />

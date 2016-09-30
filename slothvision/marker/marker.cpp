@@ -1,4 +1,4 @@
-#include "marker.h"
+/*#include "marker.h"
 
 void marker::generateMarker(const std::string& path) {
     cv::Mat markerImage;
@@ -42,3 +42,4 @@ double marker::markerDistance(const cv::Point2f& left, const cv::Point2f& right)
 
     return distance;
 }
+*/

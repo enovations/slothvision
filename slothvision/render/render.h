@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../CameraStream.h"
+#include "../network/CameraStream.h"
 
 class Render
 {

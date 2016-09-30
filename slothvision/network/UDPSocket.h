@@ -9,18 +9,20 @@
 #include <string.h>
 #include <sys/stat.h>
 
-int32_t InitWinsock();
+namespace network {
 
-int32_t TerminateWinsock();
+    int32_t InitWinsock();
 
-int connect(int local_port);
+    int32_t TerminateWinsock();
 
-void disconnect(int nogavica);
+    int connect(int local_port);
+
+    void disconnect(int nogavica);
 
 
-int32_t sendData(uint32_t addr, int nogavica, char *data, int dataLen, int port);
+    int32_t sendData(uint32_t addr, int nogavica, char *data, int dataLen, int port);
 
-int receive(int nogavica, char *rec_buff, int buff_len);
-
+    int receive(int nogavica, char *rec_buff, int buff_len);
+}
 
 #endif //SLOTHVISION_UFP_H

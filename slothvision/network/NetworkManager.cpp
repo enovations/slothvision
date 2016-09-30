@@ -1,12 +1,20 @@
 #include "NetworkManager.h"
 #include <Windows.h>
+#include "UDPSocket.h"
 
-struct IPv4
-{
-	unsigned char b1, b2, b3, b4;
-};
+void sendStringUDP(std::string data, network_manager::IPv4 ip, int port) {
+	char udp_buffer[512] = { 0 };
+	int nogavica = network::connect(port);
+	uint32_t add = 0;
+	uint8_t *tmp = (uint8_t*)&add;
+	tmp[0] = ip.b1;
+	tmp[1] = ip.b2;
+	tmp[2] = ip.b3;
+	tmp[3] = ip.b4;
+	network::sendData(add, nogavica, (char*)data.c_str(), data.size(), port);
+}
 
-bool getIPAddress(IPv4 & myIP)
+bool getIPAddress(network_manager::IPv4 & myIP)
 {
 	char szBuffer[1024];
 
@@ -47,11 +55,21 @@ bool getIPAddress(IPv4 & myIP)
 	return true;
 }
 
-int NetworkManager::MSG_requestCameraVideoData(int port) {
+int network_manager::MSG_requestCameraVideoData(int port, struct network_manager::IPv4 ip_raspberry) {
 
-	IPv4 address;
+	//my address to which to send
+	network_manager::IPv4 address;
 
 	if (getIPAddress(address)) {
+
+		//request ip
+		std::string toSend = "ip: " + std::to_string(address.b1) + "." + std::to_string(address.b2) + "." + std::to_string(address.b3) + "." + std::to_string(address.b4);
+		network_manager::sendStringUDP(toSend, ip_raspberry, 8008);
+
+		//request port
+		toSend = "port: " + port;
+		network_manager::sendStringUDP(toSend, ip_raspberry, 8008);
+
 		return 0;
 	}
 	else {
@@ -60,17 +78,19 @@ int NetworkManager::MSG_requestCameraVideoData(int port) {
 
 }
 
-//char udp_buffer[512] = { 0 };
-//
-//int nogavica = connect(25564);
-//uint32_t add = 0;
-//uint8_t *tmp = (uint8_t*)&add;
-//tmp[0] = 127;
-//tmp[1] = 0;
-//tmp[2] = 0;
-//tmp[3] = 1;
-//sendData(add, nogavica, "neki", 4, 25565);
-//
+void network_manager::sendStringUDP(std::string data, IPv4 ip, int port) {
+	char udp_buffer[512] = { 0 };
+
+	int nogavica = network::connect(23745);
+	uint32_t add = 0;
+	uint8_t *tmp = (uint8_t*)&add;
+	tmp[0] = 127;
+	tmp[1] = 0;
+	tmp[2] = 0;
+	tmp[3] = 1;
+	network::sendData(add, nogavica, "neki", 4, port);
+}
+
 //while (1)
 //{
 //	int newData = receive(nogavica, udp_buffer, 512);
