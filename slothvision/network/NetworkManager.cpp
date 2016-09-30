@@ -64,7 +64,11 @@ int network_manager::MSG_requestCameraVideoData(int port, struct network_manager
 	if (getIPAddress(address)) {
 
 		//request ip
-		std::string toSend = "ip: "+std::to_string(address.b1);
+		std::string toSend = "ip: " + std::to_string(address.b1) + "." + std::to_string(address.b2) + "." + std::to_string(address.b3) + "." + std::to_string(address.b4);
+		network_manager::sendStringUDP(toSend, ip_raspberry, 8008);
+
+		//request port
+		toSend = "port: " + port;
 		network_manager::sendStringUDP(toSend, ip_raspberry, 8008);
 
 		return 0;
@@ -77,7 +81,7 @@ int network_manager::MSG_requestCameraVideoData(int port, struct network_manager
 
 void network_manager::sendStringUDP(std::string data, IPv4 ip, int port) {
 	char udp_buffer[512] = { 0 };
-	
+
 	int nogavica = network::connect(23745);
 	uint32_t add = 0;
 	uint8_t *tmp = (uint8_t*)&add;

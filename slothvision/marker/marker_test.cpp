@@ -3,7 +3,7 @@
 #include <iostream>
 #include <opencv2/highgui/highgui.hpp>
 
-int main() {
+int main_tmp() {
     std::cout << "Generating marker..." << std::endl;
     marker::generateMarker("marker.jpg");
     std::cout << "Marker generated." << std::endl << "Starting searching for marker..." << std::endl;
