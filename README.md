@@ -33,11 +33,17 @@ This project can be compiled on any platform. Use CMAKE for Unix systems and Vis
 
 # Installation (OSX, Linux)
 
-* TODO
+Setup on Unix systems depends on the scope of modules you would like to compile. In order to compile all modules, you need:
+
+* OpenCV 3.1 with source and compiled version
+* OculusSDK 1.8
+* GStreamer 1.0 installed, including devel version
+
+Use cmake to build the project.
 
 # Hardware (setup, diagrams)
 
-TODO
+TODO: ros module diagram, robot picture, diagram of LAN setup, ...
 
 # How to use SlothVision software
 
