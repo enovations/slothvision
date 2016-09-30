@@ -2,7 +2,7 @@
 
 WSADATA wsaData;
 
-int32_t InitWinsock() {
+int32_t network::InitWinsock() {
     // Initialize Winsock - version 2.2
     if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0) {
         return -1;
@@ -10,13 +10,13 @@ int32_t InitWinsock() {
     return 0;
 }
 
-int32_t TerminateWinsock() {
+int32_t network::TerminateWinsock() {
     WSACleanup();
     return 0;
 }
 
 
-int connect(int local_port) {
+int network::connect(int local_port) {
 	int t = 100; // 100 ms timeout
     if (InitWinsock() != 0) {
         return 0;
@@ -56,13 +56,13 @@ int connect(int local_port) {
     return nogavica;
 }
 
-void disconnect(int nogavica) {
+void network::disconnect(int nogavica) {
     if (nogavica)
         closesocket(nogavica);
 }
 
 
-int32_t sendData(uint32_t addr, int nogavica, char *data, int dataLen, int port) {
+int32_t network::sendData(uint32_t addr, int nogavica, char *data, int dataLen, int port) {
     struct sockaddr_in dest_ip;
     dest_ip.sin_family = AF_INET;
     dest_ip.sin_port = htons(port);
@@ -74,7 +74,7 @@ int32_t sendData(uint32_t addr, int nogavica, char *data, int dataLen, int port)
     return 0;
 }
 
-int receive(int nogavica, char *rec_buff, int buff_len) {
+int network::receive(int nogavica, char *rec_buff, int buff_len) {
     fd_set fds;
     struct timeval stimeout;
     FD_ZERO(&fds);
