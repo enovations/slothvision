@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="control\control.cpp" />
     <ClCompile Include="marker\marker.cpp" />
     <ClCompile Include="marker\marker_test.cpp" />
     <ClCompile Include="network\CameraStream.cpp" />
@@ -151,9 +152,10 @@
     <ClCompile Include="thirdparty\CAPI_GLE.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="control\control.h" />
     <ClInclude Include="marker\marker.h" />
-    <ClInclude Include="NetworkManager.h" />
     <ClInclude Include="network\CameraStream.h" />
+    <ClInclude Include="network\NetworkManager.h" />
     <ClInclude Include="network\UDPSocket.h" />
     <ClInclude Include="parser\RosDataParser.h" />
     <ClInclude Include="pid\pid.h" />

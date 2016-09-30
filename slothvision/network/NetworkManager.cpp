@@ -1,5 +1,6 @@
 #include "NetworkManager.h"
 #include <Windows.h>
+#include "UDPSocket.h"
 
 struct IPv4
 {
@@ -60,17 +61,19 @@ int NetworkManager::MSG_requestCameraVideoData(int port) {
 
 }
 
-//char udp_buffer[512] = { 0 };
-//
-//int nogavica = connect(25564);
-//uint32_t add = 0;
-//uint8_t *tmp = (uint8_t*)&add;
-//tmp[0] = 127;
-//tmp[1] = 0;
-//tmp[2] = 0;
-//tmp[3] = 1;
-//sendData(add, nogavica, "neki", 4, 25565);
-//
+void sendStringUDP(std::string data, IPv4 ip, int port) {
+	char udp_buffer[512] = { 0 };
+	
+	int nogavica = network::connect(23745);
+	uint32_t add = 0;
+	uint8_t *tmp = (uint8_t*)&add;
+	tmp[0] = 127;
+	tmp[1] = 0;
+	tmp[2] = 0;
+	tmp[3] = 1;
+	network::sendData(add, nogavica, "neki", 4, port);
+}
+
 //while (1)
 //{
 //	int newData = receive(nogavica, udp_buffer, 512);

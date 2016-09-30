@@ -49,6 +49,12 @@
     <Filter Include="Source Files\pid">
       <UniqueIdentifier>{1008d405-2d4d-4fb1-92ef-84cea39cd003}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\control">
+      <UniqueIdentifier>{7307a27f-c6cd-429c-9eaf-6ca3544b00a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\control">
+      <UniqueIdentifier>{dd46b799-ae65-4fba-aac8-c64dd3e5ce51}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="thirdparty\CAPI_GLE.cpp">
@@ -81,6 +87,9 @@
     <ClCompile Include="network\NetworkManager.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
+    <ClCompile Include="control\control.cpp">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thirdparty\Win32_DirectXAppUtil.h">
@@ -98,9 +107,6 @@
     <ClInclude Include="network\UDPSocket.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkManager.h">
-      <Filter>Header Files\network</Filter>
-    </ClInclude>
     <ClInclude Include="marker\marker.h">
       <Filter>Header Files\marker</Filter>
     </ClInclude>
@@ -112,6 +118,12 @@
     </ClInclude>
     <ClInclude Include="network\CameraStream.h">
       <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="network\NetworkManager.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="control\control.h">
+      <Filter>Header Files\control</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
