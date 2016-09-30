@@ -1,7 +1,3 @@
-//
-// Created by Vid Drobnič on 9/29/16.
-//
-
 #ifndef SLOTHVISION_PID_H
 #define SLOTHVISION_PID_H
 

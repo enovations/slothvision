@@ -1,7 +1,3 @@
-//
-// Created by Vid Drobnič on 9/29/16.
-//
-
 #include "pid.h"
 
 PID::PID(double p, double i, double d, double imax, int direction) {

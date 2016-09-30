@@ -18,8 +18,10 @@ int main() {
         inputVideo.retrieve(image);
 
         cv::Point2f markerPosition;
-        if (marker::markerPosition(image, markerPosition)) {
+        std::vector<cv::Point2f> corners;
+        if (marker::markerPosition(image, markerPosition, corners)) {
             cv::circle(image, cv::Point2f(markerPosition.x, markerPosition.y), 10, cv::Scalar(255, 0, 255), -1);
+            
         }
 
         cv::imshow("Marker Test", image);
