@@ -2,8 +2,7 @@
 #include <Windows.h>
 #include "UDPSocket.h"
 
-struct IPv4
-{
+struct network_manager::IPv4 {
 	unsigned char b1, b2, b3, b4;
 };
 
@@ -48,7 +47,7 @@ bool getIPAddress(IPv4 & myIP)
 	return true;
 }
 
-int NetworkManager::MSG_requestCameraVideoData(int port) {
+int network_manager::MSG_requestCameraVideoData(int port) {
 
 	IPv4 address;
 
@@ -61,7 +60,7 @@ int NetworkManager::MSG_requestCameraVideoData(int port) {
 
 }
 
-void sendStringUDP(std::string data, IPv4 ip, int port) {
+void network_manager::sendStringUDP(std::string data, IPv4 ip, int port) {
 	char udp_buffer[512] = { 0 };
 	
 	int nogavica = network::connect(23745);
