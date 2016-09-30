@@ -48,6 +48,9 @@
     <ClCompile Include="NetworkManager.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
+    <ClCompile Include="CameraStream.cpp">
+      <Filter>Source Files\network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thirdparty\Win32_DirectXAppUtil.h">
@@ -66,6 +69,9 @@
       <Filter>Header Files\network</Filter>
     </ClInclude>
     <ClInclude Include="NetworkManager.h">
+      <Filter>Header Files\network</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraStream.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
   </ItemGroup>

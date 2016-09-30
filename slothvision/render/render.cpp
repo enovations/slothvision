@@ -16,6 +16,9 @@
 #include <opencv2/core/ocl.hpp>
 
 #include "render.h"
+#include <Windows.h>
+
+//#define ENABLE_STREAM
 
 struct SingleEyeScene
 {
@@ -164,6 +167,8 @@ struct OculusTexture
 	}
 };
 
+static Render* render = nullptr;
+
 // return true to retry later (e.g. after display lost)
 static bool MainLoop(bool retryCreate)
 {
@@ -177,17 +182,18 @@ static bool MainLoop(bool retryCreate)
 	ovrMirrorTextureDesc mirrorDesc = {};
 	long long frameIndex = 0;
 
-	int size = 512;
-	int width, height;
-	uint32_t * texDataL = new uint32_t[size * size];
-	uint32_t * texDataR = new uint32_t[size * size];
-
 	ovrSession session;
 	ovrGraphicsLuid luid;
 	ovrResult result = ovr_Create(&session, &luid);
 	if (!OVR_SUCCESS(result))
 		return retryCreate;
 
+	int size = 512;
+	int width, height;
+	uint32_t * texDataL = new uint32_t[size * size];
+	uint32_t * texDataR = new uint32_t[size * size];
+
+#ifdef ENABLE_STREAM
 	cv::VideoCapture cap("udpsrc port=6000 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! videoconvert ! appsink");
 	if (!cap.isOpened()) {
 		FATALERROR("Failed to open video stream.");
@@ -196,6 +202,7 @@ static bool MainLoop(bool retryCreate)
 	if (!capR.isOpened()) {
 		FATALERROR("Failed to open video stream.");
 	}
+#endif
 
 	ovrHmdDesc hmdDesc = ovr_GetHmdDesc(session);
 
@@ -248,6 +255,17 @@ static bool MainLoop(bool retryCreate)
 	while (DIRECTX.HandleMessages())
 	{
 		cv::Mat frame;
+		*(render->_leftCameraStream) >> frame;
+		std::stringstream ss;
+		ss << "w=" << frame.cols << " h=" << frame.rows << "\n";
+		OutputDebugString(ss.str().c_str());
+		if (frame.rows >= size && frame.cols >= size) {
+			cv::Rect myROI(0, 0, size, size);
+			cv::Mat image = frame(myROI);
+			image = image.clone();
+		}
+#ifdef ENABLE_STREAM
+		cv::Mat frame;
 		capR >> frame;
 		cv::Rect myROI(0, 0, size, size);
 		cv::Mat image = frame(myROI);
@@ -257,6 +275,7 @@ static bool MainLoop(bool retryCreate)
 		cap >> frameR;
 		cv::Mat imageR = frameR(myROI);
 		imageR = imageR.clone();
+#endif
 
 		ovrSessionStatus sessionStatus;
 		ovr_GetSessionStatus(session, &sessionStatus);
@@ -327,6 +346,7 @@ static bool MainLoop(bool retryCreate)
 					roomScene2->Models[0]->Rot = CombinedRotF;
 				}
 
+#ifdef ENABLE_STREAM
 				uint8_t * ptr1, *ptr2;
 
 				ptr1 = (uint8_t*)texDataL;
@@ -351,6 +371,11 @@ static bool MainLoop(bool retryCreate)
 
 				roomScene2->Models[0]->Fill->Tex->FillTexture(texDataL);
 				roomScene->Models[0]->Fill->Tex->FillTexture(texDataR);
+#endif
+				if (frame.rows >= size && frame.cols >= size) {
+					uint32_t * texDataPtrL = (uint32_t *)frame.data;
+					roomScene2->Models[0]->Fill->Tex->FillTexture(texDataPtrL);
+				}
 
 				if (eye == 0)
 					roomScene->Render(&prod, 1, 1, 1, 1, true);
@@ -409,6 +434,7 @@ Done:
 }
 
 void Render::start(HINSTANCE hinst) {
+	render = this;
 	ovrResult result = ovr_Initialize(nullptr);
 	VALIDATE(OVR_SUCCESS(result), "Failed to initialize libOVR.");
 
@@ -417,4 +443,14 @@ void Render::start(HINSTANCE hinst) {
 	DIRECTX.Run(MainLoop);
 
 	ovr_Shutdown();
+}
+
+void Render::setLeftCameraStream(CameraStream* leftCameraStream)
+{
+	_leftCameraStream = leftCameraStream;
+}
+
+void Render::setRightCameraStream(CameraStream* rightCameraStream)
+{
+	_rightCameraStream = rightCameraStream;
 }
