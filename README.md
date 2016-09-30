@@ -33,7 +33,9 @@ This project can be compiled on any platform. Use CMAKE for Unix systems and Vis
 * Make sure you have bin directory of GStreamer on your PATH
 * Set GSTREAMER_DIR environment variable to point on gstreamer installation. In our case it was C:\gstreamer\1.0\x86_64
 * Download and run OculusSetup.exe (https://www3.oculus.com/en-us/setup/) so you can setup Oculus Rift 3.
-* Open Visual Studio 2015 solution file and use it to build and run the project. You need Oculus Rift 3 in order to test it.
+* Open Visual Studio 2015 solution file and use it to build and run the project.
+* ???
+* Profit!
 
 # Installation (OSX, Linux)
 
