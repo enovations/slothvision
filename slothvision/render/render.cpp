@@ -52,14 +52,14 @@ struct SingleEyeScene
 		float h = 30.0f;
 		float d = 60.0f;
 		float b = 0.1f;
-		float z1 = -30;
+		float z1 = -10;
 		float z2 = z1;
 		float x1 = -10;
 		float x2 = 10;
 		float y1 = -10;
 		float y2 = 10;
 
-		int size = 512;
+		int size = 1024;
 		uint32_t c = (mode == 1 ? 0xffffffff : 0xffffffff);
 		screen.AddQuad(
 			Vertex(XMFLOAT3(x2, y1, z2), c, 1, 1),
@@ -69,10 +69,12 @@ struct SingleEyeScene
 		Add(
 			new Model(&screen, XMFLOAT3(0, 0, 0), XMFLOAT4(0, 0, 0, 1),
 				new Material(
-					new Texture(false, size, size, Texture::AUTO_WHITE)
+					//new Texture(false, 1296, 972, Texture::AUTO_WHITE)
+					new Texture(1296, 972, false)
 				)
 			)
 		);
+		//Models[0]->Fill->Tex->MipLevels = 1;
 	}
 
 	SingleEyeScene() : numModels(0) {}
@@ -254,16 +256,31 @@ static bool MainLoop(bool retryCreate)
 	// Main loop
 	while (DIRECTX.HandleMessages())
 	{
-		cv::Mat frame;
-		*(render->_leftCameraStream) >> frame;
-		std::stringstream ss;
-		ss << "w=" << frame.cols << " h=" << frame.rows << "\n";
-		OutputDebugString(ss.str().c_str());
+		/*
+		cv::Mat frameL;
+		cv::Mat frameR;
+		*(render->_leftCameraStream) >> frameL;
+		*(render->_rightCameraStream) >> frameR;*/
+		//std::stringstream ss;
+		//ss << "w=" << frame.cols << " h=" << frame.rows << "\n";
+		//OutputDebugString(ss.str().c_str());
+
+		/*
+		if (frame.rows != 0 && frame.rows != 0)
+		{
+			if (roomScene->Models[0]->Fill->Tex->SizeH != frame.rows ||
+				roomScene->Models[0]->Fill->Tex->SizeW != frame.cols)
+			{
+				roomScene->Models[0]->Fill->Tex = new Texture(false, frame.cols, frame.rows, Texture::AUTO_WHITE);
+				roomScene2->Models[0]->Fill->Tex = new Texture(false, frame.cols, frame.rows, Texture::AUTO_WHITE);
+			}
+		}	*/	
+/*
 		if (frame.rows >= size && frame.cols >= size) {
 			cv::Rect myROI(0, 0, size, size);
 			cv::Mat image = frame(myROI);
 			image = image.clone();
-		}
+		}*/
 #ifdef ENABLE_STREAM
 		cv::Mat frame;
 		capR >> frame;
@@ -372,9 +389,26 @@ static bool MainLoop(bool retryCreate)
 				roomScene2->Models[0]->Fill->Tex->FillTexture(texDataL);
 				roomScene->Models[0]->Fill->Tex->FillTexture(texDataR);
 #endif
-				if (frame.rows >= size && frame.cols >= size) {
-					uint32_t * texDataPtrL = (uint32_t *)frame.data;
-					roomScene2->Models[0]->Fill->Tex->FillTexture(texDataPtrL);
+				if (render->_leftCameraStream->isNewFrame())
+				{
+					cv::Mat frameL;
+					*(render->_leftCameraStream) >> frameL;
+					if (frameL.rows >= size && frameL.cols >= size)
+					{
+						uint32_t * texDataPtr = (uint32_t *)frameL.data;
+						roomScene->Models[0]->Fill->Tex->FillTexture(texDataPtr);
+					}
+				}
+				if (render->_rightCameraStream->isNewFrame())
+				{
+					cv::Mat frameR;
+					*(render->_rightCameraStream) >> frameR;
+
+					if (frameR.rows >= size && frameR.cols >= size)
+					{
+						uint32_t * texDataPtr = (uint32_t *)frameR.data;
+						roomScene2->Models[0]->Fill->Tex->FillTexture(texDataPtr);
+					}
 				}
 
 				if (eye == 0)

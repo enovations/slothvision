@@ -6,11 +6,13 @@
 int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 {
 	Render render;
-	
+
 	CameraStream leftCameraStream(5000);
+	leftCameraStream.name = "Left";
 	leftCameraStream.start();
 
 	CameraStream rightCameraStream(5001);
+	rightCameraStream.name = "Right";
 	rightCameraStream.start();
 
 	render.setLeftCameraStream(&leftCameraStream); 

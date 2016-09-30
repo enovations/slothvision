@@ -7,6 +7,7 @@
 #include <chrono>
 #include <sstream>
 #include <opencv2/opencv.hpp>
+#include <string>
 #ifdef ENABLE_GSTREAMER_OPENCV
 #include <opencv2/video.hpp>
 #include <opencv2/videoio.hpp>
@@ -31,6 +32,8 @@ protected:
 	cv::VideoCapture _cap;
 	cv::Mat _image;
 
+	bool bNewFrame;
+
 public:
 	CameraStream();
 	CameraStream(int port);
@@ -41,6 +44,9 @@ public:
 
 	void start();
 
+	bool isNewFrame();
+
+	std::string name;
 protected:
 	void loop();
 };

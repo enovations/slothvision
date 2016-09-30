@@ -34,6 +34,16 @@ CameraStream & CameraStream::operator >> (cv::Mat & image)
 	return *this;
 }
 
+bool CameraStream::isNewFrame()
+{
+	if (bNewFrame)
+	{
+		bNewFrame = false;
+		return true;
+	}
+	return false;
+}
+
 void CameraStream::start()
 {;
 	_theThread = std::thread(&CameraStream::loop, this);
@@ -72,7 +82,7 @@ void CameraStream::loop()
 	descr =
 //		g_strdup_printf("videotestsrc ! videoconvert ! videoscale ! "
 //			" appsink name=sink caps=\"video/x-raw,format=BGRA\"");
-	g_strdup_printf("udpsrc port=5000 caps=\"application/x-rtp,media=(string)video,clock-rate=(int)90000,payload=(int)96,encoding-name=(string)H264\" ! rtph264depay ! avdec_h264 ! videoconvert ! appsink name=sink caps=\"video/x-raw,format=BGRA\"");
+	g_strdup_printf("udpsrc port=%d caps=\"application/x-rtp,media=(string)video,clock-rate=(int)90000,payload=(int)96,encoding-name=(string)H264\" ! rtph264depay ! avdec_h264 ! videoconvert ! appsink name=sink caps=\"video/x-raw,format=BGRA\"", _port);
 	pipeline = gst_parse_launch(descr, &error);
 
 	if (error != NULL) {
@@ -167,6 +177,8 @@ void CameraStream::loop()
 				return;
 			}
 
+			//OutputDebugString(name.c_str());
+			//OutputDebugString(" - frame received!\n");
 			/* create pixmap from buffer and save, gstreamer video buffers have a stride
 			* that is rounded up to the nearest multiple of 4 */
 			buffer = gst_sample_get_buffer(sample);
@@ -177,6 +189,7 @@ void CameraStream::loop()
 				std::lock_guard<std::mutex > lock(_lock);
 				_image = image.clone();
 				gst_buffer_unmap(buffer, &map);
+				bNewFrame = true;
 			}
 			gst_sample_unref(sample);
 		}

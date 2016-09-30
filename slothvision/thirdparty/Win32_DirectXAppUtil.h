@@ -367,7 +367,7 @@ struct Texture
     {
         SizeW = sizeW;
         SizeH = sizeH;
-        MipLevels = mipLevels;
+		MipLevels = mipLevels;
 
         D3D11_TEXTURE2D_DESC dsDesc;
         dsDesc.Width = SizeW;
@@ -413,6 +413,7 @@ struct Texture
         {
             DIRECTX.Context->UpdateSubresource(Tex, level, NULL, (unsigned char *)pix, sizeW * 4, sizeH * sizeW * 4);
 
+			/*
             for (int j = 0; j < (sizeH & ~1); j += 2)
             {
                 uint8_t* psrc = (uint8_t *)pix + (sizeW * j * 4);
@@ -426,6 +427,7 @@ struct Texture
                 }
             }
             sizeW >>= 1;  sizeH >>= 1;
+			//*/
         }
     }
 
