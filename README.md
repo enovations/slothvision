@@ -26,6 +26,7 @@ This project can be compiled on any platform. Use CMAKE for Unix systems and Vis
 * Clone this repository on your computer
 * Download OpenCV 3.1 (http://opencv.org/downloads.html). Extract it somewhere on your computer. Copy contents of opencv/sources to (project root)/OpenCV/. Copy directory opencv/build into (project root)/OpenCV/ so the path to dll files is (project root)/OpenCV/build/bin/*.dll. After you do this, compile sources so all the libs are accessible.
 * Make sure you have OpenCV build/bin/Release on your PATH
+* Make sure to build OpenCV with aditional modules enabled (and add Aruco library) - https://github.com/opencv/opencv_contrib
 * You might need to install and add to PATH Intel TBB to make OpenCV work
 * Download OculusSDK 1.8 for Windows (https://developer3.oculus.com/downloads/). Extract it into OculusSDK directory so the path to the LibOVR directory is (project root)/OculusSDK/LibOVR
 * Download GStreamer 1.0 (https://gstreamer.freedesktop.org/data/pkg/windows/1.8.1/ - gstreamer-1.0-devel-x86-1.8.1.msi and gstreamer-1.0-x86_64-1.8.1.msi).
