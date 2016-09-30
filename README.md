@@ -18,7 +18,7 @@ This project can be compiled on any platform. Use CMAKE for Unix systems and Vis
 # Installation
 
 * Clone this repository on your computer
-* Download OpenCV 3.1 (http://opencv.org/downloads.html). Extract it somewhere on your comuter. Copy contents of opencv/sources to (project root)/OpenCV/. Copy directory opencv/build into (project root)/OpenCV/ so the path to dll files is (project root)/OpenCV/build/bin/*.dll
+* Download OpenCV 3.1 (http://opencv.org/downloads.html). Extract it somewhere on your computer. Copy contents of opencv/sources to (project root)/OpenCV/. Copy directory opencv/build into (project root)/OpenCV/ so the path to dll files is (project root)/OpenCV/build/bin/*.dll
 * Download OculusSDK 1.8 for Windows (https://developer3.oculus.com/downloads/). Extract it into OculusSDK directory so the path to the LibOVR directory is (project root)/OculusSDK/LibOVR
 
 ![](http://i.imgur.com/lzm2Y5X.gif)
