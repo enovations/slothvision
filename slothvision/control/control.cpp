@@ -1,13 +1,18 @@
 #include "control.h"
 
 
-Control::Control(network_manager::IPv4 address) {
-    this->address = address;
+Control::Control(network_manager::IPv4 address): address(address), thread(), running(false) {}
+
+Control::~Control() {
+    running = false;
+    if (thread.joinable()) {
+        thread.join();
+    }
 }
 
 void Control::start() {
     running = true;
-    updatesThread = std::thread(sendUpdate);
+    thread = std::thread(&Control::sendUpdate, this);
 }
 
 void Control::stop() {
