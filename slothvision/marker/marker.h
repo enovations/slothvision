@@ -1,4 +1,4 @@
-#ifndef SLOTHVISION_MARKER_H
+/*#ifndef SLOTHVISION_MARKER_H
 #define SLOTHVISION_MARKER_H
 
 #include <iostream>
@@ -16,4 +16,4 @@ namespace marker {
     double markerDistance(const cv::Point2f&, const cv::Point2f&);
 }
 
-#endif //SLOTHVISION_MARKER_H
+#endif*/
