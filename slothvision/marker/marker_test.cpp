@@ -1,4 +1,4 @@
-#include "marker.h"
+/*#include "marker.h"
 
 #include <iostream>
 #include <opencv2/highgui/highgui.hpp>
@@ -32,4 +32,4 @@ int main_tmp() {
     }
 
     return 0;
-}
+}*/
