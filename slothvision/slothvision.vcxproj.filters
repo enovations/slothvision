@@ -31,6 +31,24 @@
     <Filter Include="Source Files\render">
       <UniqueIdentifier>{6c6424c8-bf89-40d7-8532-3396bc2c9ca5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\marker">
+      <UniqueIdentifier>{3510d888-050c-4827-95de-df52d0f573d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\marker">
+      <UniqueIdentifier>{d32d7a01-6eec-4cf1-a321-f95062e68e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\parser">
+      <UniqueIdentifier>{869f65db-1c2c-462c-bc06-719e2e6571fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\parser">
+      <UniqueIdentifier>{4c5fc4ce-92ca-445c-a70e-fe6f333fcbca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pid">
+      <UniqueIdentifier>{488c6629-4681-4cbb-9f76-b3691d520d63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pid">
+      <UniqueIdentifier>{1008d405-2d4d-4fb1-92ef-84cea39cd003}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="thirdparty\CAPI_GLE.cpp">
@@ -45,10 +63,22 @@
     <ClCompile Include="network\UDPSocket.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="NetworkManager.cpp">
+    <ClCompile Include="marker\marker.cpp">
+      <Filter>Source Files\marker</Filter>
+    </ClCompile>
+    <ClCompile Include="marker\marker_test.cpp">
+      <Filter>Source Files\marker</Filter>
+    </ClCompile>
+    <ClCompile Include="parser\RosDataParser.cpp">
+      <Filter>Source Files\parser</Filter>
+    </ClCompile>
+    <ClCompile Include="pid\pid.cpp">
+      <Filter>Source Files\pid</Filter>
+    </ClCompile>
+    <ClCompile Include="network\CameraStream.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
-    <ClCompile Include="CameraStream.cpp">
+    <ClCompile Include="network\NetworkManager.cpp">
       <Filter>Source Files\network</Filter>
     </ClCompile>
   </ItemGroup>
@@ -71,7 +101,16 @@
     <ClInclude Include="NetworkManager.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
-    <ClInclude Include="CameraStream.h">
+    <ClInclude Include="marker\marker.h">
+      <Filter>Header Files\marker</Filter>
+    </ClInclude>
+    <ClInclude Include="parser\RosDataParser.h">
+      <Filter>Header Files\parser</Filter>
+    </ClInclude>
+    <ClInclude Include="pid\pid.h">
+      <Filter>Header Files\pid</Filter>
+    </ClInclude>
+    <ClInclude Include="network\CameraStream.h">
       <Filter>Header Files\network</Filter>
     </ClInclude>
   </ItemGroup>
