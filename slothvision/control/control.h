@@ -6,14 +6,15 @@
 #include <string>
 #include <cstring>
 #include "../network/UDPSocket.h"
+#include "../network/NetworkManager.h"
 
 class Control {
 private:
-    uint32_t address = 0;
+    network_manager::IPv4 address;
 protected:
     double speed, steer, pan, tilt;
 public:
-    Control(uint32_t address);
+    Control(network_manager::IPv4 address);
     void sendUpdate();
 };
 

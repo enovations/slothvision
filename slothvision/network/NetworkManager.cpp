@@ -2,12 +2,7 @@
 #include <Windows.h>
 #include "UDPSocket.h"
 
-struct IPv4
-{
-	unsigned int b1, b2, b3, b4;
-};
-
-void sendStringUDP(std::string data, IPv4 ip, int port) {
+void sendStringUDP(std::string data, network_manager::IPv4 ip, int port) {
 	char udp_buffer[512] = { 0 };
 
 	int nogavica = network::connect(23745);
@@ -20,7 +15,7 @@ void sendStringUDP(std::string data, IPv4 ip, int port) {
 	network::sendData(add, nogavica, "neki", 4, port);
 }
 
-bool getIPAddress(IPv4 & myIP)
+bool getIPAddress(network_manager::IPv4 & myIP)
 {
 	char szBuffer[1024];
 
@@ -61,16 +56,16 @@ bool getIPAddress(IPv4 & myIP)
 	return true;
 }
 
-int MSG_requestCameraVideoData(int port, struct IPv4 ip_raspberry) {
+int network_manager::MSG_requestCameraVideoData(int port, struct network_manager::IPv4 ip_raspberry) {
 
 	//my address to which to send
-	IPv4 address;
+	network_manager::IPv4 address;
 
 	if (getIPAddress(address)) {
 
 		//request ip
 		std::string toSend = "ip: "+std::to_string(address.b1);
-		sendStringUDP(toSend, ip_raspberry, 8008);
+		network_manager::sendStringUDP(toSend, ip_raspberry, 8008);
 
 		return 0;
 	}
@@ -78,6 +73,19 @@ int MSG_requestCameraVideoData(int port, struct IPv4 ip_raspberry) {
 		return -1;
 	}
 
+}
+
+void network_manager::sendStringUDP(std::string data, IPv4 ip, int port) {
+	char udp_buffer[512] = { 0 };
+	
+	int nogavica = network::connect(23745);
+	uint32_t add = 0;
+	uint8_t *tmp = (uint8_t*)&add;
+	tmp[0] = 127;
+	tmp[1] = 0;
+	tmp[2] = 0;
+	tmp[3] = 1;
+	network::sendData(add, nogavica, "neki", 4, port);
 }
 
 //while (1)
