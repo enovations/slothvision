@@ -8,6 +8,7 @@
 #include <opencv2/aruco.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <vector>
+#include <math.h>
 
 namespace marker {
     void generateMarker(const std::string& path);
