@@ -5,11 +5,17 @@
 
 <img src="http://i.imgur.com/020OPu6.png" width="400px" align="right">
 
-![](http://i.imgur.com/bacplRW.gif)
+# About
 
 This is a successor to a previus project called [RiftVision](https://github.com/Sourcegasm/RiftVision).
 
 This year there will be no quadcopter because of unfurtonate circumstances. Instead we are using a slow car that drives itself like a sloth drives a car.
+
+# Hardware
+
+You need to have ROS supported robot in order to use this software. You can modfiy RaspberryPi/slothface.py file in order to adapt our system to your robot.
+
+In order to use all the functions of this software, you need to have Oculus Rift 3, Joystick for control and robot with Raspberry Pi running our scripts found in RaspberryPi folder. There you can find more comphrensive guide regarding scripts on Raspberry Pi. You need 3 of them. One connects to the ROS (http://www.ros.org/) so this Raspberry needs to run ROS and be connected to the hardware. You also need to Raspebrry Pis for 3D video streaming. Each of them need to have camera connected and run our camera scripts found in RaspberryPi folder. All Raspberry Pis need to be on the same LAN. We recommend using WiFi router in AP mode so you can wirelesseley connect to your robot with our control software.
 
 # Platforms
 
@@ -26,7 +32,7 @@ This project can be compiled on any platform. Use CMAKE for Unix systems and Vis
 
 * TODO
 
-![](http://i.imgur.com/lzm2Y5X.gif)
+# License
 
 The code is distributed under the [GNU General Public License](https://github.com/Sourcegasm/slothvision/blob/master/LICENSE).  
 LWJGL is property of Lightweight Java Game Library Project. Licence is available [here](http://www.lwjgl.org/license).
