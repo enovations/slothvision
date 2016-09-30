@@ -26,8 +26,10 @@ This project can be compiled on any platform. Use CMAKE for Unix systems and Vis
 * Clone this repository on your computer
 * Download OpenCV 3.1 (http://opencv.org/downloads.html). Extract it somewhere on your computer. Copy contents of opencv/sources to (project root)/OpenCV/. Copy directory opencv/build into (project root)/OpenCV/ so the path to dll files is (project root)/OpenCV/build/bin/*.dll. After you do this, compile sources so all the libs are accessible.
 * Make sure you have OpenCV build/bin/Release on your PATH
+* You might need to install intel TBB to make OpenCV work
 * Download OculusSDK 1.8 for Windows (https://developer3.oculus.com/downloads/). Extract it into OculusSDK directory so the path to the LibOVR directory is (project root)/OculusSDK/LibOVR
 * Download GStreamer 1.0 (https://gstreamer.freedesktop.org/data/pkg/windows/1.8.1/ - gstreamer-1.0-devel-x86-1.8.1.msi and gstreamer-1.0-x86_64-1.8.1.msi).
+* Make sure you have bin directory of GStreamer on your PATH
 * Set GSTREAMER_BUILD environment variable to point on gstreamer installation. In our case it was C:\gstreamer\1.0\x86_64
 * Download and run OculusSetup.exe (https://www3.oculus.com/en-us/setup/) so you can setup Oculus Rift 3.
 * Open Visual Studio 2015 solution file and use it to build and run the project. You need Oculus Rift 3 in order to test it.
