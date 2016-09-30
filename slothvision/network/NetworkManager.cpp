@@ -4,8 +4,21 @@
 
 struct IPv4
 {
-	unsigned char b1, b2, b3, b4;
+	unsigned int b1, b2, b3, b4;
 };
+
+void sendStringUDP(std::string data, IPv4 ip, int port) {
+	char udp_buffer[512] = { 0 };
+
+	int nogavica = network::connect(23745);
+	uint32_t add = 0;
+	uint8_t *tmp = (uint8_t*)&add;
+	tmp[0] = 127;
+	tmp[1] = 0;
+	tmp[2] = 0;
+	tmp[3] = 1;
+	network::sendData(add, nogavica, "neki", 4, port);
+}
 
 bool getIPAddress(IPv4 & myIP)
 {
@@ -48,30 +61,23 @@ bool getIPAddress(IPv4 & myIP)
 	return true;
 }
 
-int NetworkManager::MSG_requestCameraVideoData(int port) {
+int MSG_requestCameraVideoData(int port, struct IPv4 ip_raspberry) {
 
+	//my address to which to send
 	IPv4 address;
 
 	if (getIPAddress(address)) {
+
+		//request ip
+		std::string toSend = "ip: "+std::to_string(address.b1);
+		sendStringUDP(toSend, ip_raspberry, 8008);
+
 		return 0;
 	}
 	else {
 		return -1;
 	}
 
-}
-
-void sendStringUDP(std::string data, IPv4 ip, int port) {
-	char udp_buffer[512] = { 0 };
-	
-	int nogavica = network::connect(23745);
-	uint32_t add = 0;
-	uint8_t *tmp = (uint8_t*)&add;
-	tmp[0] = 127;
-	tmp[1] = 0;
-	tmp[2] = 0;
-	tmp[3] = 1;
-	network::sendData(add, nogavica, "neki", 4, port);
 }
 
 //while (1)
