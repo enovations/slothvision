@@ -21,14 +21,14 @@ int main() {
         std::vector<cv::Point2f> corners;
         if (marker::markerPosition(image, markerPosition, corners)) {
             cv::circle(image, cv::Point2f(markerPosition.x, markerPosition.y), 10, cv::Scalar(255, 0, 255), -1);
-            
         }
 
         cv::imshow("Marker Test", image);
 
         char key = (char) cv::waitKey(1);
-        if (key == 27)
+        if (key == 27) {
             break;
+        }
     }
 
     return 0;
