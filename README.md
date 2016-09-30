@@ -52,4 +52,3 @@ TODO: Write manufacturers opinion.
 # License
 
 The code is distributed under the [GNU General Public License](https://github.com/Sourcegasm/slothvision/blob/master/LICENSE).  
-LWJGL is property of Lightweight Java Game Library Project. Licence is available [here](http://www.lwjgl.org/license).
