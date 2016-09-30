@@ -5,17 +5,21 @@
 #include <cstdint>
 #include <string>
 #include <cstring>
+#include <thread>
 #include "../network/UDPSocket.h"
 #include "../network/NetworkManager.h"
 
 class Control {
-private:
-    network_manager::IPv4 address;
 protected:
+    network_manager::IPv4 address;
+    std::thread updatesThread;
+    void sendUpdate();
     double speed, steer, pan, tilt;
+    bool running;
 public:
     Control(network_manager::IPv4 address);
-    void sendUpdate();
+    void start();
+    void stop();
 };
 
 

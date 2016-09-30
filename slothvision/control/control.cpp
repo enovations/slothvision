@@ -5,10 +5,21 @@ Control::Control(network_manager::IPv4 address) {
     this->address = address;
 }
 
-void Control::sendUpdate() {
-    std::string robotMessage = "r " + std::to_string(speed) + " " + std::to_string(steer);
-    network_manager::sendStringUDP(robotMessage, address, 1234);
+void Control::start() {
+    running = true;
+    updatesThread = std::thread(sendUpdate);
+}
 
-    std::string gimbaloMessage = "g " + std::to_string(pan) + " " + std::to_string(tilt);
-    network_manager::sendStringUDP(gimbaloMessage, address, 1234);
+void Control::stop() {
+    running = false;
+}
+
+void Control::sendUpdate() {
+    while (running) {
+        std::string robotMessage = "r " + std::to_string(speed) + " " + std::to_string(steer);
+        network_manager::sendStringUDP(robotMessage, address, 1234);
+
+        std::string gimbaloMessage = "g " + std::to_string(pan) + " " + std::to_string(tilt);
+        network_manager::sendStringUDP(gimbaloMessage, address, 1234);
+    }
 }
