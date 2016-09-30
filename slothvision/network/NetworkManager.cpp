@@ -4,15 +4,14 @@
 
 void sendStringUDP(std::string data, network_manager::IPv4 ip, int port) {
 	char udp_buffer[512] = { 0 };
-
-	int nogavica = network::connect(23745);
+	int nogavica = network::connect(port);
 	uint32_t add = 0;
 	uint8_t *tmp = (uint8_t*)&add;
-	tmp[0] = 127;
-	tmp[1] = 0;
-	tmp[2] = 0;
-	tmp[3] = 1;
-	network::sendData(add, nogavica, "neki", 4, port);
+	tmp[0] = ip.b1;
+	tmp[1] = ip.b2;
+	tmp[2] = ip.b3;
+	tmp[3] = ip.b4;
+	network::sendData(add, nogavica, (char*)data.c_str(), data.size(), port);
 }
 
 bool getIPAddress(network_manager::IPv4 & myIP)

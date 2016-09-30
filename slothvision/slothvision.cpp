@@ -3,6 +3,8 @@
 #include "network/CameraStream.h"
 #include "network/NetworkManager.h"
 #include "control/control.h"
+#include <string>
+#include <sstream>
 
 network_manager::IPv4 raspicam1;
 network_manager::IPv4 raspicam2;
@@ -25,7 +27,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	raspiros.b1 = 192;
 	raspiros.b2 = 168;
 	raspiros.b3 = 0;
-	raspiros.b4 = 100;
+	raspiros.b4 = 105;
 
 	network_manager::MSG_requestCameraVideoData(5000, raspicam1);
 	network_manager::MSG_requestCameraVideoData(5001, raspicam2);

@@ -21,6 +21,9 @@ void Control::stop() {
 
 void Control::sendUpdate() {
     while (running) {
+
+		OutputDebugString("ene");
+
         std::string robotMessage = "r " + std::to_string(speed) + " " + std::to_string(steer);
         network_manager::sendStringUDP(robotMessage, address, 8008);
 
