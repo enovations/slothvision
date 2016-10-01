@@ -52,12 +52,17 @@ struct SingleEyeScene
 		float h = 30.0f;
 		float d = 60.0f;
 		float b = 0.1f;
-		float z1 = -10;
+		float z1 = -10*2;
 		float z2 = z1;
+		//int width = 900;
+		//int height = 720;
+		int width = 1296;
+		int height = 972;
+		float ratio = (float)height / width;
 		float x1 = -10;
 		float x2 = 10;
-		float y1 = -10;
-		float y2 = 10;
+		float y1 = -10*ratio;
+		float y2 = 10*ratio;
 
 		int size = 1024;
 		uint32_t c = (mode == 1 ? 0xffffffff : 0xffffffff);
@@ -70,7 +75,8 @@ struct SingleEyeScene
 			new Model(&screen, XMFLOAT3(0, 0, 0), XMFLOAT4(0, 0, 0, 1),
 				new Material(
 					//new Texture(false, 1296, 972, Texture::AUTO_WHITE)
-					new Texture(1296, 972, false)
+					//new Texture(1296, 972, false)
+					new Texture(900, 720, false)
 				)
 			)
 		);
@@ -208,7 +214,7 @@ static bool MainLoop(bool retryCreate)
 
 	ovrHmdDesc hmdDesc = ovr_GetHmdDesc(session);
 
-	if (!DIRECTX.InitDevice(hmdDesc.Resolution.w, hmdDesc.Resolution.h, reinterpret_cast<LUID*>(&luid)))
+	if (!DIRECTX.InitDevice(hmdDesc.Resolution.w/2, hmdDesc.Resolution.h/2, reinterpret_cast<LUID*>(&luid)))
 		goto Done;
 
 	ovrRecti         eyeRenderViewport[2];
@@ -265,8 +271,10 @@ static bool MainLoop(bool retryCreate)
 		//ss << "w=" << frame.cols << " h=" << frame.rows << "\n";
 		//OutputDebugString(ss.str().c_str());
 
+		
+
 		/*
-		if (frame.rows != 0 && frame.rows != 0)
+		if (frame.rows != 0 && frame.cols != 0)
 		{
 			if (roomScene->Models[0]->Fill->Tex->SizeH != frame.rows ||
 				roomScene->Models[0]->Fill->Tex->SizeW != frame.cols)
@@ -274,7 +282,7 @@ static bool MainLoop(bool retryCreate)
 				roomScene->Models[0]->Fill->Tex = new Texture(false, frame.cols, frame.rows, Texture::AUTO_WHITE);
 				roomScene2->Models[0]->Fill->Tex = new Texture(false, frame.cols, frame.rows, Texture::AUTO_WHITE);
 			}
-		}	*/	
+		}		
 /*
 		if (frame.rows >= size && frame.cols >= size) {
 			cv::Rect myROI(0, 0, size, size);
@@ -393,8 +401,15 @@ static bool MainLoop(bool retryCreate)
 				{
 					cv::Mat frameL;
 					*(render->_leftCameraStream) >> frameL;
-					if (frameL.rows >= size && frameL.cols >= size)
+
+					if (frameL.rows > 0 && frameL.cols > 0)
 					{
+						if (roomScene->Models[0]->Fill->Tex->SizeH != frameL.rows ||
+							roomScene->Models[0]->Fill->Tex->SizeW != frameL.cols)
+						{
+							roomScene->Models[0]->Fill->Tex = new Texture(false, frameL.cols, frameL.rows, Texture::AUTO_WHITE);
+						}
+
 						uint32_t * texDataPtr = (uint32_t *)frameL.data;
 						roomScene->Models[0]->Fill->Tex->FillTexture(texDataPtr);
 					}
@@ -404,8 +419,14 @@ static bool MainLoop(bool retryCreate)
 					cv::Mat frameR;
 					*(render->_rightCameraStream) >> frameR;
 
-					if (frameR.rows >= size && frameR.cols >= size)
+					if (frameR.rows > 0 && frameR.cols > 0)
 					{
+						if (roomScene2->Models[0]->Fill->Tex->SizeH != frameR.rows ||
+							roomScene2->Models[0]->Fill->Tex->SizeW != frameR.cols)
+						{
+							roomScene2->Models[0]->Fill->Tex = new Texture(false, frameR.cols, frameR.rows, Texture::AUTO_WHITE);
+						}
+
 						uint32_t * texDataPtr = (uint32_t *)frameR.data;
 						roomScene2->Models[0]->Fill->Tex->FillTexture(texDataPtr);
 					}

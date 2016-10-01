@@ -72,7 +72,7 @@ int network_manager::MSG_requestCameraVideoData(int port, struct network_manager
 		network_manager::sendStringUDP(toSend, ip_raspberry, 8008);
 
 		//request port
-		toSend = "run";
+		toSend = "start";
 		network_manager::sendStringUDP(toSend, ip_raspberry, 8008);
 
 		return 0;
@@ -81,6 +81,13 @@ int network_manager::MSG_requestCameraVideoData(int port, struct network_manager
 		return -1;
 	}
 
+}
+
+int network_manager::MSG_requestCameraStop(struct network_manager::IPv4 ip_raspberry) {
+	//request port
+	std::string toSend("stop");
+	network_manager::sendStringUDP(toSend, ip_raspberry, 8008);
+	return 0;
 }
 
 //while (1)

@@ -33,7 +33,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	network_manager::MSG_requestCameraVideoData(5001, raspicam2);
 
 	Control control (raspiros);
-
+	
 	Render render;
 
 	CameraStream leftCameraStream(5000);
@@ -44,14 +44,18 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	rightCameraStream.name = "Right";
 	rightCameraStream.start();
 
-	render.setLeftCameraStream(&leftCameraStream); 
+	render.setLeftCameraStream(&leftCameraStream);
 	render.setRightCameraStream(&rightCameraStream);
-
 	//start control data sender
+
 	control.start();
 
 	//last thing to be called
 	render.start(hinst);
+
+	network_manager::MSG_requestCameraStop(raspicam1);
+	network_manager::MSG_requestCameraStop(raspicam2);
+	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 	return(0);
 }

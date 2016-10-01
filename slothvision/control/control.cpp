@@ -27,6 +27,6 @@ void Control::sendUpdate() {
 
         std::string gimbaloMessage = "g " + std::to_string(pan) + " " + std::to_string(tilt);
         network_manager::sendStringUDP(gimbaloMessage, address, 8008);
-
+		//TODO Sleep ...
     }
 }
