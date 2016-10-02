@@ -1,10 +1,15 @@
-#include <Windows.h>
+#include <Windows.h> 
 #include "render/render.h"
 #include "network/CameraStream.h"
 #include "network/NetworkManager.h"
 #include "control/control.h"
 #include <string>
 #include <sstream>
+
+/*
+// Gamepad example (include)
+#include "thirdparty/Win32_Gamepad.h"
+//*/
 
 network_manager::IPv4 raspicam1;
 network_manager::IPv4 raspicam2;
@@ -13,6 +18,30 @@ network_manager::IPv4 raspiros;
 
 int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 {
+	/*
+	// Gamepad example
+	using OVR::OvrPlatform::GamepadButtons;
+
+	OVR::OvrPlatform::Win32::GamepadManager gm;
+	OVR::OvrPlatform::GamepadState gs;
+	std::stringstream ss;
+	ss << "Gamepad count = " << gm.GetGamepadCount() << "\n";
+	OutputDebugString(ss.str().c_str());
+	
+	if (gm.GetGamepadCount()) {
+		for (;;) {
+			gm.GetGamepadState(&gs);
+			std::stringstream ss;
+			ss << " A=" << ((gs.Buttons & GamepadButtons::Gamepad_A) != 0);
+			ss << " B=" << ((gs.Buttons & GamepadButtons::Gamepad_B) != 0);
+			ss << " Left X=" << gs.LX << " Y=" << gs.LY << " T=" << gs.LT;
+			ss << " Right X=" << gs.RX << " Y=" << gs.RY << " T=" << gs.RT;
+			ss << "\n";
+			OutputDebugString(ss.str().c_str());
+			std::this_thread::sleep_for(std::chrono::milliseconds(10));
+		}
+	}
+	//*/
 
 	raspicam1.b1 = 192;
 	raspicam1.b2 = 168;
