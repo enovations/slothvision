@@ -4,6 +4,8 @@
 // Include the Oculus SDK
 #include "OVR_CAPI_D3D.h"
 
+#include <OVR_Math.h>
+
 // OpenCV
 #include <iostream>
 #include <string>
@@ -320,6 +322,15 @@ static bool MainLoop(bool retryCreate)
 				XMVECTOR eyeQuat = XMVectorSet(EyeRenderPose[eye].Orientation.x, EyeRenderPose[eye].Orientation.y,
 					EyeRenderPose[eye].Orientation.z, EyeRenderPose[eye].Orientation.w);
 				XMVECTOR eyePos = XMVectorSet(EyeRenderPose[eye].Position.x, EyeRenderPose[eye].Position.y, EyeRenderPose[eye].Position.z, 0);
+
+				// Query the HMD for ts current tracking state.
+				ovrTrackingState ts = ovr_GetTrackingState(session, ovr_GetTimeInSeconds(), ovrTrue);
+				if ( ts.StatusFlags & ovrStatus_OrientationTracked ) {
+					ovrQuatf quat = ts.HeadPose.ThePose.Orientation;
+					OVR::Quatf q(quat);
+					float yaw, pitch, roll;
+					q.GetYawPitchRoll(&yaw, &pitch, &roll);
+				}
 
 				// std::cout << EyeRenderPose[eye].Position.x << " " << EyeRenderPose[eye].Position.y << " " << EyeRenderPose[eye].Position.z << " (" << EyeRenderPose[eye].Orientation.x << " " << EyeRenderPose[eye].Orientation.y << " "  << EyeRenderPose[eye].Orientation.z << " " << EyeRenderPose[eye].Orientation.w << std::endl;
 
