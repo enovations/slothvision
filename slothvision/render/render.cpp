@@ -18,11 +18,18 @@
 #include "render.h"
 #include <Windows.h>
 
-//#define ENABLE_STREAM
+const double pi = std::acos(-1);
 
 struct SingleEyeScene
 {
+	static const int DEFAULT_WIDTH;
+	static const int DEFAULT_HEIGHT;
+	static const float DEFAULT_Z;
+	static const float DEFAULT_FOV;
+	static const uint32_t DEFAULT_COLOUR;
+
 	static const int MAX_MODELS = 100;
+	Model *cameraScreen;
 	Model *Models[MAX_MODELS];
 	int numModels;
 
@@ -34,63 +41,69 @@ struct SingleEyeScene
 
 	void Render(XMMATRIX * projView, float R, float G, float B, float A, bool standardUniforms)
 	{
+		cameraScreen->Render(projView, R, G, B, A, standardUniforms);
 		for (int i = 0; i < numModels; ++i)
 			Models[i]->Render(projView, R, G, B, A, standardUniforms);
 	}
 
 	void RenderInstanced(XMMATRIX * projViews, float R, float G, float B, float A, bool standardUniforms)
 	{
+		cameraScreen->RenderInstanced(projViews, R, G, B, A, standardUniforms);
 		for (int i = 0; i < numModels; ++i)
 			Models[i]->RenderInstanced(projViews, R, G, B, A, standardUniforms);
 	}
 
-	void Init(int mode)
+	void Init()
 	{
+		prepareCameraScreen(DEFAULT_WIDTH, DEFAULT_HEIGHT, DEFAULT_Z, DEFAULT_FOV, 0xffffffff);
 
-		TriangleSet screen;
-		float w = 40.0f;
-		float h = 30.0f;
-		float d = 60.0f;
-		float b = 0.1f;
-		float z1 = -10*2;
-		float z2 = z1;
-		//int width = 900;
-		//int height = 720;
-		int width = 1296;
-		int height = 972;
-		float ratio = (float)height / width;
-		float x1 = -10;
-		float x2 = 10;
-		float y1 = -10*ratio;
-		float y2 = 10*ratio;
-
-		int size = 1024;
-		uint32_t c = (mode == 1 ? 0xffffffff : 0xffffffff);
-		screen.AddQuad(
-			Vertex(XMFLOAT3(x2, y1, z2), c, 1, 1),
-			Vertex(XMFLOAT3(x1, y1, z2), c, 0, 1),
-			Vertex(XMFLOAT3(x2, y2, z2), c, 1, 0),
-			Vertex(XMFLOAT3(x1, y2, z2), c, 0, 0));
+		TriangleSet cube;
+		cube.AddSolidColorBox(0.5f, -0.5f, 0.5f, -0.5f, 0.5f, -0.5f, 0xff00ff00);
 		Add(
-			new Model(&screen, XMFLOAT3(0, 0, 0), XMFLOAT4(0, 0, 0, 1),
+			new Model(&cube, XMFLOAT3(0, 0, 0), XMFLOAT4(0, 0, 0, 1),
 				new Material(
-					//new Texture(false, 1296, 972, Texture::AUTO_WHITE)
-					//new Texture(1296, 972, false)
-					new Texture(900, 720, false)
+					new Texture(false, 256, 256, Texture::AUTO_CEILING)
 				)
 			)
 		);
-		//Models[0]->Fill->Tex->MipLevels = 1;
 	}
 
-	SingleEyeScene() : numModels(0) {}
-	SingleEyeScene(int mode) :
-		numModels(0)
+	void prepareCameraScreen(int width, int height, float z, float fov, uint32_t colour)
 	{
-		Init(mode);
+		TriangleSet screen;
+		float ratio = (float)height / width;
+		float length = z*2.0*std::tan(fov / 2.0);
+		float x1 = -length / 2;
+		float x2 = length / 2;
+		float y1 = x1 * ratio;
+		float y2 = x2 * ratio;
+		screen.AddQuad(
+			Vertex(XMFLOAT3(x2, y1, -z), colour, 1, 1),
+			Vertex(XMFLOAT3(x1, y1, -z), colour, 0, 1),
+			Vertex(XMFLOAT3(x2, y2, -z), colour, 1, 0),
+			Vertex(XMFLOAT3(x1, y2, -z), colour, 0, 0));
+		delete cameraScreen;
+		cameraScreen = new Model(&screen, XMFLOAT3(0, 0, 0), XMFLOAT4(0, 0, 0, 1),
+			new Material(
+				new Texture(width, height, false, 1, 1, true)
+			)
+		);
+	}
+
+	SingleEyeScene() :
+		numModels(0),
+		cameraScreen(nullptr)
+	{}
+	SingleEyeScene(bool init) :
+		numModels(0),
+		cameraScreen(nullptr)
+	{
+		if ( init )
+			Init();
 	}
 	void Release()
 	{
+		delete cameraScreen;
 		while (numModels-- > 0)
 			delete Models[numModels];
 	}
@@ -99,6 +112,12 @@ struct SingleEyeScene
 		Release();
 	}
 };
+
+const int SingleEyeScene::DEFAULT_WIDTH = 1296;
+const int SingleEyeScene::DEFAULT_HEIGHT = 972;
+const float SingleEyeScene::DEFAULT_Z = 50.0f;
+const float SingleEyeScene::DEFAULT_FOV = 54.0f*pi / 180.0f;
+const uint32_t SingleEyeScene::DEFAULT_COLOUR = 0xffffffff;
 
 struct OculusTexture
 {
@@ -184,8 +203,8 @@ static bool MainLoop(bool retryCreate)
 	ovrMirrorTexture mirrorTexture = nullptr;
 	OculusTexture  * pEyeRenderTexture[2] = { nullptr, nullptr };
 	DepthBuffer    * pEyeDepthBuffer[2] = { nullptr, nullptr };
-	SingleEyeScene          * roomScene = nullptr;
-	SingleEyeScene          * roomScene2 = nullptr;
+	SingleEyeScene          * leftEyeScene = nullptr;
+	SingleEyeScene          * rightEyeScene = nullptr;
 	Camera         * mainCam = nullptr;
 	ovrMirrorTextureDesc mirrorDesc = {};
 	long long frameIndex = 0;
@@ -195,26 +214,11 @@ static bool MainLoop(bool retryCreate)
 	ovrResult result = ovr_Create(&session, &luid);
 	if (!OVR_SUCCESS(result))
 		return retryCreate;
-
-	int size = 512;
-	int width, height;
-	uint32_t * texDataL = new uint32_t[size * size];
-	uint32_t * texDataR = new uint32_t[size * size];
-
-#ifdef ENABLE_STREAM
-	cv::VideoCapture cap("udpsrc port=6000 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! videoconvert ! appsink");
-	if (!cap.isOpened()) {
-		FATALERROR("Failed to open video stream.");
-	}
-	cv::VideoCapture capR("udpsrc port=6001 ! application/x-rtp,encoding-name=JPEG,payload=26 ! rtpjpegdepay ! jpegdec ! videoconvert ! appsink");
-	if (!capR.isOpened()) {
-		FATALERROR("Failed to open video stream.");
-	}
-#endif
-
+	
 	ovrHmdDesc hmdDesc = ovr_GetHmdDesc(session);
 
-	if (!DIRECTX.InitDevice(hmdDesc.Resolution.w/2, hmdDesc.Resolution.h/2, reinterpret_cast<LUID*>(&luid)))
+	const int scale = 2;
+	if (!DIRECTX.InitDevice(hmdDesc.Resolution.w / scale, hmdDesc.Resolution.h / scale, reinterpret_cast<LUID*>(&luid)))
 		goto Done;
 
 	ovrRecti         eyeRenderViewport[2];
@@ -250,8 +254,8 @@ static bool MainLoop(bool retryCreate)
 		FATALERROR("Failed to create mirror texture.");
 	}
 
-	roomScene = new SingleEyeScene(0);
-	roomScene2 = new SingleEyeScene(1);
+	leftEyeScene  = new SingleEyeScene(true);
+	rightEyeScene = new SingleEyeScene(true);
 
 	// Create camera
 	mainCam = new Camera(XMVectorSet(0.0f, 0.0f, 5.0f, 0), XMQuaternionIdentity());
@@ -262,46 +266,6 @@ static bool MainLoop(bool retryCreate)
 	// Main loop
 	while (DIRECTX.HandleMessages())
 	{
-		/*
-		cv::Mat frameL;
-		cv::Mat frameR;
-		*(render->_leftCameraStream) >> frameL;
-		*(render->_rightCameraStream) >> frameR;*/
-		//std::stringstream ss;
-		//ss << "w=" << frame.cols << " h=" << frame.rows << "\n";
-		//OutputDebugString(ss.str().c_str());
-
-		
-
-		/*
-		if (frame.rows != 0 && frame.cols != 0)
-		{
-			if (roomScene->Models[0]->Fill->Tex->SizeH != frame.rows ||
-				roomScene->Models[0]->Fill->Tex->SizeW != frame.cols)
-			{
-				roomScene->Models[0]->Fill->Tex = new Texture(false, frame.cols, frame.rows, Texture::AUTO_WHITE);
-				roomScene2->Models[0]->Fill->Tex = new Texture(false, frame.cols, frame.rows, Texture::AUTO_WHITE);
-			}
-		}		
-/*
-		if (frame.rows >= size && frame.cols >= size) {
-			cv::Rect myROI(0, 0, size, size);
-			cv::Mat image = frame(myROI);
-			image = image.clone();
-		}*/
-#ifdef ENABLE_STREAM
-		cv::Mat frame;
-		capR >> frame;
-		cv::Rect myROI(0, 0, size, size);
-		cv::Mat image = frame(myROI);
-		image = image.clone();
-
-		cv::Mat frameR;
-		cap >> frameR;
-		cv::Mat imageR = frameR(myROI);
-		imageR = imageR.clone();
-#endif
-
 		ovrSessionStatus sessionStatus;
 		ovr_GetSessionStatus(session, &sessionStatus);
 		if (sessionStatus.ShouldQuit)
@@ -315,7 +279,6 @@ static bool MainLoop(bool retryCreate)
 
 		if (sessionStatus.IsVisible)
 		{
-
 			// Call ovr_GetRenderDesc each frame to get the ovrEyeRenderDesc, as the returned values (e.g. HmdToEyeOffset) may change at runtime.
 			ovrEyeRenderDesc eyeRenderDesc[2];
 			eyeRenderDesc[0] = ovr_GetRenderDesc(session, ovrEye_Left, hmdDesc.DefaultEyeFov[0]);
@@ -332,6 +295,22 @@ static bool MainLoop(bool retryCreate)
 			// Render Scene to Eye Buffers
 			for (int eye = 0; eye < 2; ++eye)
 			{
+				CameraStream* cameraStream;
+				SingleEyeScene* scene;
+				if (eye == 0) {
+					cameraStream = render->getLeftCameraStream();
+					scene = leftEyeScene;
+				}
+				else {
+					cameraStream = render->getRightCameraStream();
+					scene = rightEyeScene;
+				}
+
+				// Animate the cube
+				static float cubeClock = 0;
+				scene->Models[0]->Pos = XMFLOAT3(9 * sin(cubeClock), 3, 9 * cos(cubeClock));
+				cubeClock += 0.015f;
+
 				// Clear and set up rendertarget
 				DIRECTX.SetAndClearRenderTarget(pEyeRenderTexture[eye]->GetRTV(), pEyeDepthBuffer[eye]);
 				DIRECTX.SetViewport((float)eyeRenderViewport[eye].Pos.x, (float)eyeRenderViewport[eye].Pos.y,
@@ -342,7 +321,7 @@ static bool MainLoop(bool retryCreate)
 					EyeRenderPose[eye].Orientation.z, EyeRenderPose[eye].Orientation.w);
 				XMVECTOR eyePos = XMVectorSet(EyeRenderPose[eye].Position.x, EyeRenderPose[eye].Position.y, EyeRenderPose[eye].Position.z, 0);
 
-				//				std::cout << EyeRenderPose[eye].Position.x << " " << EyeRenderPose[eye].Position.y << " " << EyeRenderPose[eye].Position.z << " (" << EyeRenderPose[eye].Orientation.x << " " << EyeRenderPose[eye].Orientation.y << " "  << EyeRenderPose[eye].Orientation.z << " " << EyeRenderPose[eye].Orientation.w << std::endl;
+				// std::cout << EyeRenderPose[eye].Position.x << " " << EyeRenderPose[eye].Position.y << " " << EyeRenderPose[eye].Position.z << " (" << EyeRenderPose[eye].Orientation.x << " " << EyeRenderPose[eye].Orientation.y << " "  << EyeRenderPose[eye].Orientation.z << " " << EyeRenderPose[eye].Orientation.w << std::endl;
 
 				// Get view and projection matrices for the Rift camera
 				XMVECTOR CombinedPos = XMVectorAdd(mainCam->Pos, XMVector3Rotate(eyePos, mainCam->Rot));
@@ -362,81 +341,32 @@ static bool MainLoop(bool retryCreate)
 				XMVECTOR CombinedRot = XMQuaternionMultiply(eyeQuat, mainCam->Rot);
 				XMFLOAT4 CombinedRotF;
 				XMStoreFloat4(&CombinedRotF, CombinedRot);
-				if (eye == 0) {
-					roomScene->Models[0]->Pos = CombinedPosF;
-					roomScene->Models[0]->Rot = CombinedRotF;
-				}
-				else {
-					roomScene2->Models[0]->Pos = CombinedPosF;
-					roomScene2->Models[0]->Rot = CombinedRotF;
-				}
+				scene->cameraScreen->Pos = CombinedPosF;
+				scene->cameraScreen->Rot = CombinedRotF;
 
-#ifdef ENABLE_STREAM
-				uint8_t * ptr1, *ptr2;
-
-				ptr1 = (uint8_t*)texDataL;
-				ptr2 = image.data;
-				for (int i = 0; i < size * size; i++)
-				{
-					*(uint32_t*)ptr1 = *(uint32_t*)ptr2;
-					ptr1[3] = 0xFF;
-					ptr1 += 4;
-					ptr2 += 3;
-				}
-
-				ptr1 = (uint8_t*)texDataR;
-				ptr2 = imageR.data;
-				for (int i = 0; i < size * size; i++)
-				{
-					*(uint32_t*)ptr1 = *(uint32_t*)ptr2;
-					ptr1[3] = 0xFF;
-					ptr1 += 4;
-					ptr2 += 3;
-				}
-
-				roomScene2->Models[0]->Fill->Tex->FillTexture(texDataL);
-				roomScene->Models[0]->Fill->Tex->FillTexture(texDataR);
-#endif
-				if (render->_leftCameraStream->isNewFrame())
-				{
-					cv::Mat frameL;
-					*(render->_leftCameraStream) >> frameL;
-
-					if (frameL.rows > 0 && frameL.cols > 0)
-					{
-						if (roomScene->Models[0]->Fill->Tex->SizeH != frameL.rows ||
-							roomScene->Models[0]->Fill->Tex->SizeW != frameL.cols)
-						{
-							roomScene->Models[0]->Fill->Tex = new Texture(false, frameL.cols, frameL.rows, Texture::AUTO_WHITE);
+				// Update camera screen
+				if (cameraStream->isNewFrame()) {
+					cv::Mat frame;
+					*cameraStream >> frame;
+					if (frame.rows > 0 && frame.cols > 0) {
+						if (scene->cameraScreen->Fill->Tex->SizeH != frame.rows || scene->cameraScreen->Fill->Tex->SizeW != frame.cols) {
+							scene->prepareCameraScreen(frame.cols, frame.rows,
+								SingleEyeScene::DEFAULT_Z,
+								SingleEyeScene::DEFAULT_FOV,
+								SingleEyeScene::DEFAULT_COLOUR);
 						}
-
-						uint32_t * texDataPtr = (uint32_t *)frameL.data;
-						roomScene->Models[0]->Fill->Tex->FillTexture(texDataPtr);
-					}
-				}
-				if (render->_rightCameraStream->isNewFrame())
-				{
-					cv::Mat frameR;
-					*(render->_rightCameraStream) >> frameR;
-
-					if (frameR.rows > 0 && frameR.cols > 0)
-					{
-						if (roomScene2->Models[0]->Fill->Tex->SizeH != frameR.rows ||
-							roomScene2->Models[0]->Fill->Tex->SizeW != frameR.cols)
-						{
-							roomScene2->Models[0]->Fill->Tex = new Texture(false, frameR.cols, frameR.rows, Texture::AUTO_WHITE);
+						if ( !frame.isContinuous() ) {
+							frame = frame.clone();
 						}
-
-						uint32_t * texDataPtr = (uint32_t *)frameR.data;
-						roomScene2->Models[0]->Fill->Tex->FillTexture(texDataPtr);
+						uint32_t * texData = (uint32_t *)frame.data;
+						scene->cameraScreen->Fill->Tex->FillTexture(texData);
 					}
 				}
 
-				if (eye == 0)
-					roomScene->Render(&prod, 1, 1, 1, 1, true);
-				else
-					roomScene2->Render(&prod, 1, 1, 1, 1, true);
+				// Render
+				scene->Render(&prod, 1, 1, 1, 1, true);
 
+				// Commit
 				pEyeRenderTexture[eye]->Commit();
 			}
 
@@ -471,7 +401,7 @@ static bool MainLoop(bool retryCreate)
 
 Done:
 	delete mainCam;
-	delete roomScene;
+	delete leftEyeScene;
 	if (mirrorTexture)
 		ovr_DestroyMirrorTexture(session, mirrorTexture);
 	for (int eye = 0; eye < 2; ++eye)
@@ -482,18 +412,15 @@ Done:
 	DIRECTX.ReleaseDevice();
 	ovr_Destroy(session);
 
-	delete[] texDataL;
-	delete[] texDataR;
-
 	return retryCreate || (result == ovrError_DisplayLost);
-}
+		}
 
 void Render::start(HINSTANCE hinst) {
 	render = this;
 	ovrResult result = ovr_Initialize(nullptr);
 	VALIDATE(OVR_SUCCESS(result), "Failed to initialize libOVR.");
 
-	VALIDATE(DIRECTX.InitWindow(hinst, L"Oculus Room Tiny (DX11)"), "Failed to open window.");
+	VALIDATE(DIRECTX.InitWindow(hinst, L"Bruc2016"), "Failed to open window.");
 
 	DIRECTX.Run(MainLoop);
 
@@ -508,4 +435,14 @@ void Render::setLeftCameraStream(CameraStream* leftCameraStream)
 void Render::setRightCameraStream(CameraStream* rightCameraStream)
 {
 	_rightCameraStream = rightCameraStream;
+}
+
+CameraStream * Render::getLeftCameraStream() const
+{
+	return _leftCameraStream;
+}
+
+CameraStream * Render::getRightCameraStream() const
+{
+	return _rightCameraStream;
 }

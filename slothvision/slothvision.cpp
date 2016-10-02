@@ -55,7 +55,7 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 
 	network_manager::MSG_requestCameraStop(raspicam1);
 	network_manager::MSG_requestCameraStop(raspicam2);
-	//std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+	//std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
 	return(0);
 }

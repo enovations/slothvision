@@ -10,7 +10,8 @@ CameraStream::CameraStream() :
 CameraStream::CameraStream(int port) :
 	_theThread(),
 	_stop(false),
-	_port(port)
+	_port(port),
+	_newFrameAvailable(false)
 {
 }
 
@@ -36,12 +37,12 @@ CameraStream & CameraStream::operator >> (cv::Mat & image)
 
 bool CameraStream::isNewFrame()
 {
-	if (bNewFrame)
-	{
-		bNewFrame = false;
-		return true;
+	bool ans = false;
+	if (_newFrameAvailable) {
+		_newFrameAvailable = false;
+		ans = true;
 	}
-	return false;
+	return ans;
 }
 
 void CameraStream::start()
@@ -189,7 +190,7 @@ void CameraStream::loop()
 				std::lock_guard<std::mutex > lock(_lock);
 				_image = image.clone();
 				gst_buffer_unmap(buffer, &map);
-				bNewFrame = true;
+				_newFrameAvailable = true;
 			}
 			gst_sample_unref(sample);
 		}

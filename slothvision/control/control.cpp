@@ -16,7 +16,7 @@ void Control::start() {
 }
 
 void Control::stop() {
-    running = false;
+    running = false; //TODO Join should be called also here ...
 }
 
 void Control::sendUpdate() {
@@ -27,6 +27,7 @@ void Control::sendUpdate() {
 
         std::string gimbaloMessage = "g " + std::to_string(pan) + " " + std::to_string(tilt);
         network_manager::sendStringUDP(gimbaloMessage, address, 8008);
-		//TODO Sleep ...
+		
+		std::this_thread::sleep_for(std::chrono::milliseconds(20));
     }
 }

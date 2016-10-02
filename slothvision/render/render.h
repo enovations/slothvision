@@ -4,7 +4,7 @@
 
 class Render
 {
-public:
+protected:
 	CameraStream* _leftCameraStream;
 	CameraStream* _rightCameraStream;
 
@@ -13,4 +13,7 @@ public:
 
 	void setLeftCameraStream(CameraStream* leftCameraStream);
 	void setRightCameraStream(CameraStream* rightCameraStream);
+
+	CameraStream* getLeftCameraStream() const;
+	CameraStream* getRightCameraStream() const;
 };

@@ -248,7 +248,7 @@ struct DirectX11
         scDesc.BufferCount = 2;
         scDesc.BufferDesc.Width = WinSizeW;
         scDesc.BufferDesc.Height = WinSizeH;
-		scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        scDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
         scDesc.BufferDesc.RefreshRate.Denominator = 1;
         scDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         scDesc.OutputWindow = Window;
@@ -360,21 +360,23 @@ struct Texture
     ID3D11ShaderResourceView   * TexSv;
     ID3D11RenderTargetView     * TexRtv;
     int                          SizeW, SizeH, MipLevels;
+	bool _enableMipMaps;
 
     enum { AUTO_WHITE = 1, AUTO_WALL, AUTO_FLOOR, AUTO_CEILING, AUTO_GRID, AUTO_GRADE_256 };
-    Texture() : Tex(nullptr), TexSv(nullptr), TexRtv(nullptr) {};
-    void Init(int sizeW, int sizeH, bool rendertarget, int mipLevels, int sampleCount)
+    Texture() : Tex(nullptr), TexSv(nullptr), TexRtv(nullptr), _enableMipMaps(true) {};
+    void Init(int sizeW, int sizeH, bool rendertarget, int mipLevels, int sampleCount, bool enableMipMaps)
     {
         SizeW = sizeW;
         SizeH = sizeH;
-		MipLevels = mipLevels;
+        MipLevels = mipLevels;
+		_enableMipMaps = enableMipMaps;
 
         D3D11_TEXTURE2D_DESC dsDesc;
         dsDesc.Width = SizeW;
         dsDesc.Height = SizeH;
         dsDesc.MipLevels = MipLevels;
         dsDesc.ArraySize = 1;
-        dsDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;// DXGI_FORMAT_R8G8B8A8_UNORM;
+        dsDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
         dsDesc.SampleDesc.Count = sampleCount;
         dsDesc.SampleDesc.Quality = 0;
         dsDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -388,13 +390,13 @@ struct Texture
         TexRtv = nullptr;
         if (rendertarget) DIRECTX.Device->CreateRenderTargetView(Tex, NULL, &TexRtv);
     }
-    Texture(int sizeW, int sizeH, bool rendertarget, int mipLevels = 1, int sampleCount = 1)
+    Texture(int sizeW, int sizeH, bool rendertarget, int mipLevels = 1, int sampleCount = 1, bool enableMipMaps = true)
     {
-        Init(sizeW, sizeH, rendertarget, mipLevels, sampleCount);
+        Init(sizeW, sizeH, rendertarget, mipLevels, sampleCount, enableMipMaps);
     }
-    Texture(bool rendertarget, int sizeW, int sizeH, int autoFillData = 0, int sampleCount = 1)
+    Texture(bool rendertarget, int sizeW, int sizeH, int autoFillData = 0, int sampleCount = 1, bool enableMipMaps = true)
     {
-        Init(sizeW, sizeH, rendertarget, autoFillData ? 8 : 1, sampleCount);
+        Init(sizeW, sizeH, rendertarget, autoFillData ? 8 : 1, sampleCount, enableMipMaps);
         if (autoFillData) AutoFillTexture(autoFillData);
     }
     ~Texture()
@@ -413,21 +415,21 @@ struct Texture
         {
             DIRECTX.Context->UpdateSubresource(Tex, level, NULL, (unsigned char *)pix, sizeW * 4, sizeH * sizeW * 4);
 
-			/*
-            for (int j = 0; j < (sizeH & ~1); j += 2)
-            {
-                uint8_t* psrc = (uint8_t *)pix + (sizeW * j * 4);
-                uint8_t* pdest = (uint8_t *)pix + (sizeW * j);
-                for (int i = 0; i < sizeW >> 1; i++, psrc += 8, pdest += 4)
-                {
-                    pdest[0] = (((int)psrc[0]) + psrc[4] + psrc[sizeW * 4 + 0] + psrc[sizeW * 4 + 4]) >> 2;
-                    pdest[1] = (((int)psrc[1]) + psrc[5] + psrc[sizeW * 4 + 1] + psrc[sizeW * 4 + 5]) >> 2;
-                    pdest[2] = (((int)psrc[2]) + psrc[6] + psrc[sizeW * 4 + 2] + psrc[sizeW * 4 + 6]) >> 2;
-                    pdest[3] = (((int)psrc[3]) + psrc[7] + psrc[sizeW * 4 + 3] + psrc[sizeW * 4 + 7]) >> 2;
-                }
-            }
-            sizeW >>= 1;  sizeH >>= 1;
-			//*/
+			if (_enableMipMaps) {
+				for (int j = 0; j < (sizeH & ~1); j += 2)
+				{
+					uint8_t* psrc = (uint8_t *)pix + (sizeW * j * 4);
+					uint8_t* pdest = (uint8_t *)pix + (sizeW * j);
+					for (int i = 0; i < sizeW >> 1; i++, psrc += 8, pdest += 4)
+					{
+						pdest[0] = (((int)psrc[0]) + psrc[4] + psrc[sizeW * 4 + 0] + psrc[sizeW * 4 + 4]) >> 2;
+						pdest[1] = (((int)psrc[1]) + psrc[5] + psrc[sizeW * 4 + 1] + psrc[sizeW * 4 + 5]) >> 2;
+						pdest[2] = (((int)psrc[2]) + psrc[6] + psrc[sizeW * 4 + 2] + psrc[sizeW * 4 + 6]) >> 2;
+						pdest[3] = (((int)psrc[3]) + psrc[7] + psrc[sizeW * 4 + 3] + psrc[sizeW * 4 + 7]) >> 2;
+					}
+				}
+				sizeW >>= 1;  sizeH >>= 1;
+			}
         }
     }
 
@@ -656,11 +658,10 @@ struct TriangleSet
 
     void AddSolidColorBox(float x1, float y1, float z1, float x2, float y2, float z2, uint32_t c)
     {
-		/*
-        AddQuad(Vertex(XMFLOAT3(x1, y2, z1), c, z1, x1),
-                Vertex(XMFLOAT3(x2, y2, z1), c, z1, x2),
-                Vertex(XMFLOAT3(x1, y2, z2), c, z2, x1),
-                Vertex(XMFLOAT3(x2, y2, z2), c, z2, x2));
+        AddQuad(Vertex(XMFLOAT3(x1, y2, z1), ModifyColor(c, XMFLOAT3(x1, y2, z1)), z1, x1),
+                Vertex(XMFLOAT3(x2, y2, z1), ModifyColor(c, XMFLOAT3(x2, y2, z1)), z1, x2),
+                Vertex(XMFLOAT3(x1, y2, z2), ModifyColor(c, XMFLOAT3(x1, y2, z2)), z2, x1),
+                Vertex(XMFLOAT3(x2, y2, z2), ModifyColor(c, XMFLOAT3(x2, y2, z2)), z2, x2));
         AddQuad(Vertex(XMFLOAT3(x2, y1, z1), ModifyColor(c, XMFLOAT3(x2, y1, z1)), z1, x2),
                 Vertex(XMFLOAT3(x1, y1, z1), ModifyColor(c, XMFLOAT3(x1, y1, z1)), z1, x1),
                 Vertex(XMFLOAT3(x2, y1, z2), ModifyColor(c, XMFLOAT3(x2, y1, z2)), z2, x2),
@@ -669,16 +670,14 @@ struct TriangleSet
                 Vertex(XMFLOAT3(x1, y1, z1), ModifyColor(c, XMFLOAT3(x1, y1, z1)), z1, y1),
                 Vertex(XMFLOAT3(x1, y2, z2), ModifyColor(c, XMFLOAT3(x1, y2, z2)), z2, y2),
                 Vertex(XMFLOAT3(x1, y2, z1), ModifyColor(c, XMFLOAT3(x1, y2, z1)), z1, y2));
-				//*/
-		
-        /*AddQuad(Vertex(XMFLOAT3(x2, y1, z1), ModifyColor(c, XMFLOAT3(x2, y1, z1)), z1, y1),
+        AddQuad(Vertex(XMFLOAT3(x2, y1, z1), ModifyColor(c, XMFLOAT3(x2, y1, z1)), z1, y1),
                 Vertex(XMFLOAT3(x2, y1, z2), ModifyColor(c, XMFLOAT3(x2, y1, z2)), z2, y1),
                 Vertex(XMFLOAT3(x2, y2, z1), ModifyColor(c, XMFLOAT3(x2, y2, z1)), z1, y2),
-                Vertex(XMFLOAT3(x2, y2, z2), ModifyColor(c, XMFLOAT3(x2, y2, z2)), z2, y2));*/
-        /*AddQuad(Vertex(XMFLOAT3(x1, y1, z1), ModifyColor(c, XMFLOAT3(x1, y1, z1)), x1, y1),
+                Vertex(XMFLOAT3(x2, y2, z2), ModifyColor(c, XMFLOAT3(x2, y2, z2)), z2, y2));
+        AddQuad(Vertex(XMFLOAT3(x1, y1, z1), ModifyColor(c, XMFLOAT3(x1, y1, z1)), x1, y1),
                 Vertex(XMFLOAT3(x2, y1, z1), ModifyColor(c, XMFLOAT3(x2, y1, z1)), x2, y1),
                 Vertex(XMFLOAT3(x1, y2, z1), ModifyColor(c, XMFLOAT3(x1, y2, z1)), x1, y2),
-                Vertex(XMFLOAT3(x2, y2, z1), ModifyColor(c, XMFLOAT3(x2, y2, z1)), x2, y2));*/
+                Vertex(XMFLOAT3(x2, y2, z1), ModifyColor(c, XMFLOAT3(x2, y2, z1)), x2, y2));
         AddQuad(Vertex(XMFLOAT3(x2, y1, z2), ModifyColor(c, XMFLOAT3(x2, y1, z2)), x2, y1),
                 Vertex(XMFLOAT3(x1, y1, z2), ModifyColor(c, XMFLOAT3(x1, y1, z2)), x1, y1),
                 Vertex(XMFLOAT3(x2, y2, z2), ModifyColor(c, XMFLOAT3(x2, y2, z2)), x2, y2),

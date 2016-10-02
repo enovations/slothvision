@@ -32,7 +32,7 @@ protected:
 	cv::VideoCapture _cap;
 	cv::Mat _image;
 
-	bool bNewFrame;
+	bool _newFrameAvailable;
 
 public:
 	CameraStream();
