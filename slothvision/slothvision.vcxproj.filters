@@ -90,6 +90,9 @@
     <ClCompile Include="control\control.cpp">
       <Filter>Source Files\control</Filter>
     </ClCompile>
+    <ClCompile Include="thirdparty\Win32_Gamepad.cpp">
+      <Filter>Source Files\thirdparty</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="thirdparty\Win32_DirectXAppUtil.h">
@@ -124,6 +127,15 @@
     </ClInclude>
     <ClInclude Include="control\control.h">
       <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\Gamepad.h">
+      <Filter>Header Files\thirdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\Win32_Gamepad.h">
+      <Filter>Header Files\thirdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="thirdparty\Logger.h">
+      <Filter>Header Files\thirdparty</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
