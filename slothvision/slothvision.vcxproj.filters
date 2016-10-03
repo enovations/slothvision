@@ -55,6 +55,12 @@
     <Filter Include="Source Files\control">
       <UniqueIdentifier>{dd46b799-ae65-4fba-aac8-c64dd3e5ce51}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\sensors">
+      <UniqueIdentifier>{caad4844-59b7-47b7-9ed3-4521fc3d5eb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\sensors">
+      <UniqueIdentifier>{47b87f52-a7cc-4024-981d-b72144ea1a92}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="thirdparty\CAPI_GLE.cpp">
@@ -92,6 +98,9 @@
     </ClCompile>
     <ClCompile Include="thirdparty\Win32_Gamepad.cpp">
       <Filter>Source Files\thirdparty</Filter>
+    </ClCompile>
+    <ClCompile Include="sensors\Sensors.cpp">
+      <Filter>Source Files\sensors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -136,6 +145,9 @@
     </ClInclude>
     <ClInclude Include="thirdparty\Logger.h">
       <Filter>Header Files\thirdparty</Filter>
+    </ClInclude>
+    <ClInclude Include="sensors\Sensors.h">
+      <Filter>Header Files\sensors</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

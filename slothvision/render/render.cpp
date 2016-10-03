@@ -300,18 +300,18 @@ static bool MainLoop(bool retryCreate)
 				CameraStream* cameraStream;
 				SingleEyeScene* scene;
 				if (eye == 0) {
-					cameraStream = render->getLeftCameraStream();
+					cameraStream = render->leftCameraStream;
 					scene = leftEyeScene;
 				}
 				else {
-					cameraStream = render->getRightCameraStream();
+					cameraStream = render->rightCameraStream;
 					scene = rightEyeScene;
 				}
 
 				// Animate the cube
 				static float cubeClock = 0;
 				scene->Models[0]->Pos = XMFLOAT3(9 * sin(cubeClock), 3, 9 * cos(cubeClock));
-				cubeClock += 0.015f;
+				cubeClock += 0.005f;
 
 				// Clear and set up rendertarget
 				DIRECTX.SetAndClearRenderTarget(pEyeRenderTexture[eye]->GetRTV(), pEyeDepthBuffer[eye]);
@@ -330,6 +330,7 @@ static bool MainLoop(bool retryCreate)
 					OVR::Quatf q(quat);
 					float yaw, pitch, roll;
 					q.GetYawPitchRoll(&yaw, &pitch, &roll);
+					render->sensors->setOrientation(roll, pitch, yaw);
 				}
 
 				// std::cout << EyeRenderPose[eye].Position.x << " " << EyeRenderPose[eye].Position.y << " " << EyeRenderPose[eye].Position.z << " (" << EyeRenderPose[eye].Orientation.x << " " << EyeRenderPose[eye].Orientation.y << " "  << EyeRenderPose[eye].Orientation.z << " " << EyeRenderPose[eye].Orientation.w << std::endl;
@@ -424,7 +425,14 @@ Done:
 	ovr_Destroy(session);
 
 	return retryCreate || (result == ovrError_DisplayLost);
-		}
+}
+
+Render::Render() :
+	leftCameraStream(nullptr),
+	rightCameraStream(nullptr),
+	sensors(nullptr)
+{
+}
 
 void Render::start(HINSTANCE hinst) {
 	render = this;
@@ -436,24 +444,4 @@ void Render::start(HINSTANCE hinst) {
 	DIRECTX.Run(MainLoop);
 
 	ovr_Shutdown();
-}
-
-void Render::setLeftCameraStream(CameraStream* leftCameraStream)
-{
-	_leftCameraStream = leftCameraStream;
-}
-
-void Render::setRightCameraStream(CameraStream* rightCameraStream)
-{
-	_rightCameraStream = rightCameraStream;
-}
-
-CameraStream * Render::getLeftCameraStream() const
-{
-	return _leftCameraStream;
-}
-
-CameraStream * Render::getRightCameraStream() const
-{
-	return _rightCameraStream;
 }

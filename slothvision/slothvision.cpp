@@ -3,13 +3,9 @@
 #include "network/CameraStream.h"
 #include "network/NetworkManager.h"
 #include "control/control.h"
+#include "sensors/Sensors.h"
 #include <string>
 #include <sstream>
-
-/*
-// Gamepad example (include)
-#include "thirdparty/Win32_Gamepad.h"
-//*/
 
 network_manager::IPv4 raspicam1;
 network_manager::IPv4 raspicam2;
@@ -18,31 +14,6 @@ network_manager::IPv4 raspiros;
 
 int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 {
-	/*
-	// Gamepad example
-	using OVR::OvrPlatform::GamepadButtons;
-
-	OVR::OvrPlatform::Win32::GamepadManager gm;
-	OVR::OvrPlatform::GamepadState gs;
-	std::stringstream ss;
-	ss << "Gamepad count = " << gm.GetGamepadCount() << "\n";
-	OutputDebugString(ss.str().c_str());
-	
-	if (gm.GetGamepadCount()) {
-		for (;;) {
-			gm.GetGamepadState(&gs);
-			std::stringstream ss;
-			ss << " A=" << ((gs.Buttons & GamepadButtons::Gamepad_A) != 0);
-			ss << " B=" << ((gs.Buttons & GamepadButtons::Gamepad_B) != 0);
-			ss << " Left X=" << gs.LX << " Y=" << gs.LY << " T=" << gs.LT;
-			ss << " Right X=" << gs.RX << " Y=" << gs.RY << " T=" << gs.RT;
-			ss << "\n";
-			OutputDebugString(ss.str().c_str());
-			std::this_thread::sleep_for(std::chrono::milliseconds(10));
-		}
-	}
-	//*/
-
 	raspicam1.b1 = 192;
 	raspicam1.b2 = 168;
 	raspicam1.b3 = 0;
@@ -58,10 +29,16 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	raspiros.b3 = 0;
 	raspiros.b4 = 100;
 
+	Sensors sensors;
+	sensors.start();
+
+	while (true)
+		std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+
 	network_manager::MSG_requestCameraVideoData(5000, raspicam1);
 	network_manager::MSG_requestCameraVideoData(5001, raspicam2);
 
-	Control control (raspiros);
+	Control control(raspiros, &sensors);
 	
 	Render render;
 
@@ -73,8 +50,9 @@ int WINAPI WinMain(HINSTANCE hinst, HINSTANCE, LPSTR, int)
 	rightCameraStream.name = "Right";
 	rightCameraStream.start();
 
-	render.setLeftCameraStream(&leftCameraStream);
-	render.setRightCameraStream(&rightCameraStream);
+	render.leftCameraStream = &leftCameraStream;
+	render.rightCameraStream = &rightCameraStream;
+	render.sensors = &sensors;
 	//start control data sender
 
 	control.start();

@@ -1,7 +1,13 @@
 #include "control.h"
 
 
-Control::Control(network_manager::IPv4 address): address(address), thread(), running(false) {}
+Control::Control(network_manager::IPv4 address, Sensors* _sensors) :
+	address(address),
+	thread(),
+	running(false),
+	sensors(_sensors)
+{
+}
 
 Control::~Control() {
     running = false;

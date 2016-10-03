@@ -148,6 +148,7 @@
     <ClCompile Include="parser\RosDataParser.cpp" />
     <ClCompile Include="pid\pid.cpp" />
     <ClCompile Include="render\render.cpp" />
+    <ClCompile Include="sensors\Sensors.cpp" />
     <ClCompile Include="slothvision.cpp" />
     <ClCompile Include="thirdparty\CAPI_GLE.cpp" />
     <ClCompile Include="thirdparty\Win32_Gamepad.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="parser\RosDataParser.h" />
     <ClInclude Include="pid\pid.h" />
     <ClInclude Include="render\render.h" />
+    <ClInclude Include="sensors\Sensors.h" />
     <ClInclude Include="thirdparty\CAPI_GLE.h" />
     <ClInclude Include="thirdparty\CAPI_GLE_GL.h" />
     <ClInclude Include="thirdparty\Gamepad.h" />

@@ -1,19 +1,17 @@
 #pragma once
 
 #include "../network/CameraStream.h"
+#include "../sensors/Sensors.h"
 
 class Render
 {
-protected:
-	CameraStream* _leftCameraStream;
-	CameraStream* _rightCameraStream;
+public:
+	CameraStream* leftCameraStream;
+	CameraStream* rightCameraStream;
+	Sensors* sensors;
 
-public: 
+public:
+	Render();
+
 	void start(HINSTANCE hinst);
-
-	void setLeftCameraStream(CameraStream* leftCameraStream);
-	void setRightCameraStream(CameraStream* rightCameraStream);
-
-	CameraStream* getLeftCameraStream() const;
-	CameraStream* getRightCameraStream() const;
 };

@@ -8,6 +8,7 @@
 #include <thread>
 #include "../network/UDPSocket.h"
 #include "../network/NetworkManager.h"
+#include "../sensors/Sensors.h"
 
 class Control {
 protected:
@@ -17,7 +18,10 @@ protected:
     double speed, steer, pan, tilt;
     bool running;
 public:
-    Control(network_manager::IPv4 address);
+	Sensors* sensors;
+
+public:
+    Control(network_manager::IPv4 address, Sensors* sensors);
     ~Control();
     void start();
     void stop();
